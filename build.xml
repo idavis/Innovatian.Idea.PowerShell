@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="innovatian.idea.powershell" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.ftl"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.idea_iu-99.32" value="${jdk.home.idea_iu-99.32}/../../../Program Files/Java/jdk1.6.0_23/bin"/>
+  <path id="jdk.classpath.idea_iu-99.32">
+    <fileset dir="${jdk.home.idea_iu-99.32}">
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/alt-rt.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/alt-string.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/charsets.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/deploy.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/javaws.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/jce.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/jsse.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/management-agent.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/plugin.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/resources.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/rt.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/ext/dnsns.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/ext/localedata.jar"/>
+      <include name="../../../Program Files/Java/jdk1.6.0_23/jre/lib/ext/sunjce_provider.jar"/>
+      <include name="lib/alloy.jar"/>
+      <include name="lib/annotations.jar"/>
+      <include name="lib/asm-commons.jar"/>
+      <include name="lib/asm-tree-3.0.jar"/>
+      <include name="lib/asm.jar"/>
+      <include name="lib/automaton.jar"/>
+      <include name="lib/batik.jar"/>
+      <include name="lib/boot.jar"/>
+      <include name="lib/bootstrap.jar"/>
+      <include name="lib/cglib-2.2.jar"/>
+      <include name="lib/commons-codec-1.3.jar"/>
+      <include name="lib/commons-collections.jar"/>
+      <include name="lib/commons-lang-2.4.jar"/>
+      <include name="lib/commons-net-2.0-patched.jar"/>
+      <include name="lib/dtdparser113.jar"/>
+      <include name="lib/extensions.jar"/>
+      <include name="lib/forms_rt.jar"/>
+      <include name="lib/foundrylogic-vpp-2.2.1.jar"/>
+      <include name="lib/freemarker.jar"/>
+      <include name="lib/groovy-all-1.7.3.jar"/>
+      <include name="lib/guava-r06.jar"/>
+      <include name="lib/icons.jar"/>
+      <include name="lib/idea-jsp-openapi.jar"/>
+      <include name="lib/idea_rt.jar"/>
+      <include name="lib/jasper21_rt.jar"/>
+      <include name="lib/jasper2_rt.jar"/>
+      <include name="lib/javac2.jar"/>
+      <include name="lib/jaxen-1.1.3.jar"/>
+      <include name="lib/jcip-annotations.jar"/>
+      <include name="lib/jdom.jar"/>
+      <include name="lib/jgoodies-forms.jar"/>
+      <include name="lib/jh.jar"/>
+      <include name="lib/jna-utils.jar"/>
+      <include name="lib/jna.jar"/>
+      <include name="lib/jsf-api.jar"/>
+      <include name="lib/jsp-api.jar"/>
+      <include name="lib/jsr173_1.0_api.jar"/>
+      <include name="lib/junit-4.7.jar"/>
+      <include name="lib/junit.jar"/>
+      <include name="lib/log4j.jar"/>
+      <include name="lib/looks-2.2.2.jar"/>
+      <include name="lib/microba.jar"/>
+      <include name="lib/nanoxml-2.2.3.jar"/>
+      <include name="lib/openapi.jar"/>
+      <include name="lib/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
+      <include name="lib/oromatcher.jar"/>
+      <include name="lib/picocontainer.jar"/>
+      <include name="lib/resolver.jar"/>
+      <include name="lib/resources.jar"/>
+      <include name="lib/resources_en.jar"/>
+      <include name="lib/serviceMessages.jar"/>
+      <include name="lib/servlet-api.jar"/>
+      <include name="lib/trove4j.jar"/>
+      <include name="lib/trove4j_src.jar"/>
+      <include name="lib/util.jar"/>
+      <include name="lib/velocity.jar"/>
+      <include name="lib/xbean.jar"/>
+      <include name="lib/xerces.jar"/>
+      <include name="lib/xml-apis.jar"/>
+      <include name="lib/xmlrpc-2.0.jar"/>
+      <include name="lib/xpp3-1.1.4-min.jar"/>
+      <include name="lib/xstream.jar"/>
+      <include name="lib/yjp-controller-api-redist.jar"/>
+      <include name="plugins/JavaEE/lib/javaee-openapi.jar"/>
+      <include name="plugins/JavaEE/lib/jpa-console.jar"/>
+      <include name="plugins/JavaEE/lib/resources_en.jar"/>
+      <include name="plugins/JSF/lib/jsf-support.jar"/>
+      <include name="plugins/JSF/lib/resources_en.jar"/>
+      <include name="plugins/PersistenceSupport/lib/persistence-openapi.jar"/>
+      <include name="plugins/PersistenceSupport/lib/resources_en.jar"/>
+      <include name="plugins/DatabaseSupport/lib/database-openapi.jar"/>
+      <include name="plugins/DatabaseSupport/lib/jdbc-console.jar"/>
+      <include name="plugins/DatabaseSupport/lib/resources_en.jar"/>
+      <include name="plugins/css/lib/css-openapi.jar"/>
+      <include name="plugins/css/lib/resources_en.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.idea_iu-99.32}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.idea_iu-99.32}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.idea_iu-99.32"/>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm.jar"/>
+    <pathelement location="${javac2.home}/asm-commons.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module Innovatian.Idea.PowerShell -->
+  
+  <dirname property="module.innovatian.idea.powershell.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.innovatian.idea.powershell" value="${jdk.home.idea_iu-99.32}"/>
+  <property name="module.jdk.bin.innovatian.idea.powershell" value="${jdk.bin.idea_iu-99.32}"/>
+  <property name="module.jdk.classpath.innovatian.idea.powershell" value="jdk.classpath.idea_iu-99.32"/>
+  
+  <property name="compiler.args.innovatian.idea.powershell" value="${compiler.args}"/>
+  
+  <property name="innovatian.idea.powershell.output.dir" value="${module.innovatian.idea.powershell.basedir}/out/production/Innovatian.Idea.PowerShell"/>
+  <property name="innovatian.idea.powershell.testoutput.dir" value="${module.innovatian.idea.powershell.basedir}/out/test/Innovatian.Idea.PowerShell"/>
+  
+  <path id="innovatian.idea.powershell.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="innovatian.idea.powershell.module.production.classpath">
+    <path refid="${module.jdk.classpath.innovatian.idea.powershell}"/>
+  </path>
+  
+  <path id="innovatian.idea.powershell.runtime.production.module.classpath">
+    <pathelement location="${innovatian.idea.powershell.output.dir}"/>
+  </path>
+  
+  <path id="innovatian.idea.powershell.module.classpath">
+    <path refid="${module.jdk.classpath.innovatian.idea.powershell}"/>
+    <pathelement location="${innovatian.idea.powershell.output.dir}"/>
+  </path>
+  
+  <path id="innovatian.idea.powershell.runtime.module.classpath">
+    <pathelement location="${innovatian.idea.powershell.testoutput.dir}"/>
+    <pathelement location="${innovatian.idea.powershell.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.innovatian.idea.powershell">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.innovatian.idea.powershell">
+    <patternset refid="excluded.from.module.innovatian.idea.powershell"/>
+  </patternset>
+  
+  <path id="innovatian.idea.powershell.module.sourcepath">
+    <dirset dir="${module.innovatian.idea.powershell.basedir}">
+      <include name="src"/>
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  <path id="innovatian.idea.powershell.module.test.sourcepath">
+    <dirset dir="${module.innovatian.idea.powershell.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.innovatian.idea.powershell" depends="compile.module.innovatian.idea.powershell.production,compile.module.innovatian.idea.powershell.tests" description="Compile module Innovatian.Idea.PowerShell"/>
+  
+  <target name="compile.module.innovatian.idea.powershell.production" depends="register.custom.compilers" description="Compile module Innovatian.Idea.PowerShell; production classes">
+    <mkdir dir="${innovatian.idea.powershell.output.dir}"/>
+    <javac2 destdir="${innovatian.idea.powershell.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.innovatian.idea.powershell}/javac">
+      <compilerarg line="${compiler.args.innovatian.idea.powershell}"/>
+      <bootclasspath refid="innovatian.idea.powershell.module.bootclasspath"/>
+      <classpath refid="innovatian.idea.powershell.module.production.classpath"/>
+      <src refid="innovatian.idea.powershell.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.innovatian.idea.powershell"/>
+    </javac2>
+    
+    <copy todir="${innovatian.idea.powershell.output.dir}/com/innovatian/idea/powershell">
+      <fileset dir="${module.innovatian.idea.powershell.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+    <copy todir="${innovatian.idea.powershell.output.dir}">
+      <fileset dir="${module.innovatian.idea.powershell.basedir}/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.innovatian.idea.powershell.tests" depends="register.custom.compilers,compile.module.innovatian.idea.powershell.production" description="compile module Innovatian.Idea.PowerShell; test classes" unless="skip.tests">
+    <mkdir dir="${innovatian.idea.powershell.testoutput.dir}"/>
+    <javac2 destdir="${innovatian.idea.powershell.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.innovatian.idea.powershell}/javac">
+      <compilerarg line="${compiler.args.innovatian.idea.powershell}"/>
+      <bootclasspath refid="innovatian.idea.powershell.module.bootclasspath"/>
+      <classpath refid="innovatian.idea.powershell.module.classpath"/>
+      <src refid="innovatian.idea.powershell.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.innovatian.idea.powershell"/>
+    </javac2>
+    
+    <copy todir="${innovatian.idea.powershell.testoutput.dir}">
+      <fileset dir="${module.innovatian.idea.powershell.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.innovatian.idea.powershell" description="cleanup module">
+    <delete dir="${innovatian.idea.powershell.output.dir}"/>
+    <delete dir="${innovatian.idea.powershell.testoutput.dir}"/>
+  </target>
+  
+  <property name="innovatian.idea.powershell.plugin.path.jar" value="${module.innovatian.idea.powershell.basedir}/Innovatian.Idea.PowerShell.jar"/>
+  
+  <!-- Build archive for plugin 'Innovatian.Idea.PowerShell' -->
+  <target name="plugin.build.jar.innovatian.idea.powershell" depends="compile.module.innovatian.idea.powershell" description="Build plugin archive for module &apos;Innovatian.Idea.PowerShell&apos;">
+    <jar destfile="${innovatian.idea.powershell.plugin.path.jar}" duplicate="preserve">
+      <zipfileset dir="${module.innovatian.idea.powershell.basedir}/out/production/Innovatian.Idea.PowerShell"/>
+      <zipfileset file="${module.innovatian.idea.powershell.basedir}/META-INF/plugin.xml" prefix="META-INF"/>
+      <manifest>
+        <attribute name="Created-By" value="IntelliJ IDEA"/>
+        <attribute name="Manifest-Version" value="1.0"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.innovatian.idea.powershell" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, plugin.build.jar.innovatian.idea.powershell" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>

@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 %%
 
-%class PowerShellLexer
-%implements FlexLexer, PowerShellTokenTypes
+%class _PowerShellLexer
+%implements FlexLexer, PsTokenTypes
 
 %unicode
 
@@ -21,6 +21,20 @@ import org.jetbrains.annotations.NotNull;
 
 %init{
 %init}
+
+%x XSTRINGQ
+%x XSTRINGA
+
+VARIABLE = \$[A-Za-z]+ | \$\{.+\}
+PARAMETERARGUMENTTOKEN = [^-($0-9].*[^ \t]
+PARAMETERTOKEN = -[A-Za-z]+[:]{PARAMETERARGUMENTTOKEN}
+CALLARGUMENTSEPARATOR= ' |'
+COMMATOKEN = ' |'
+
+DECDIGIT         =     [0-9]
+HEXDIGIT       =       [0-9A-Fa-f]
+DECLITERAL     =       {DECDIGIT}+
+HEXLITERAL     =       0[xX]{HEXDIGIT}+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// NewLines and spaces /////////////////////////////////////////////////////////////////////////////////////////
@@ -37,13 +51,51 @@ NLS = {ONE_NL}({ONE_NL}|{WS})*
 C_STYLE_COMMENT=("/*" [^"*"] {COMMENT_TAIL} ) | "/*"
 COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 
-SH_COMMENT = "#"[^\r\n]*
-SL_COMMENT = "/""/"[^\r\n]*
-ML_COMMENT = {C_STYLE_COMMENT}
-
 %%
 
-/* Keywords */
+#[^\r\n]*       { return SL_COMMENT; }
+{C_STYLE_COMMENT} { return ML_COMMENT; }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Strings /////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+"\""         { yybegin(XSTRINGQ);  return EXPSTRING; }
+'            { yybegin(XSTRINGA); return STRING; }
+
+<XSTRINGQ>
+{
+  \"\"       {yybegin(XSTRINGQ); return EXPSTRING;}
+  \"         { yybegin(YYINITIAL); return EXPSTRING; }
+  \\[abfnrt] {return EXPSTRING;}
+  "$"        { return DOLLAR;  }
+  "{"        { return LCURLY;}
+  "}"        { return RCURLY;}
+  \\\n       {yybegin(YYINITIAL);return WRONG;}
+  \\\"       {return EXPSTRING; }
+  \\'        {return EXPSTRING;}
+  \\\\       { return EXPSTRING; }
+  {NLS}  { yybegin(YYINITIAL); return WRONG; }
+  .          {return EXPSTRING;}
+}
+
+<XSTRINGA>
+{
+  ''         { yybegin(XSTRINGA); return STRING; }
+  '          { yybegin(YYINITIAL); return STRING; }
+  \\[abfnrt] { return STRING; }
+  \\\n       { yybegin(YYINITIAL);return WRONG; }
+  \\\'       { return STRING; }
+  \\'        { yybegin(YYINITIAL); return STRING; }
+  \\\\       { return STRING; }
+  {NLS}  { yybegin(YYINITIAL);return WRONG;  }
+  .          { return STRING; }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Keywords ////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 "begin"        { return BEGIN; }
 "break"        { return BREAK; }
 "catch"        { return CATCH; }
@@ -70,14 +122,16 @@ ML_COMMENT = {C_STYLE_COMMENT}
 "while"        { return WHILE; }
 "until"        { return UNTIL; }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Operators ///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-{WS}          { return WS; }
+{WS}         { return WS; }
 "..."        { return ELLIPSIS; }
 ".."         { return RANGE; }
 "=="         { return EQ; }
 ">="         { return GE; }
 "<="         { return LE; }
-"~="         { return NE; }
 "-"          { return MINUS; }
 "+"          { return PLUS;}
 "*"          { return MULT;}
@@ -97,7 +151,8 @@ ML_COMMENT = {C_STYLE_COMMENT}
 ":"          { return COLON; }
 "."          { return DOT;}
 "^"          { return EXP;}
-{NLS}         { return NEWLINE; }
+{NLS}        { return NEWLINE; }
+"$"          { return DOLLAR;  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////      Comparison Operators      ///////////////////////////////////////////////////////////////////
@@ -156,4 +211,10 @@ ML_COMMENT = {C_STYLE_COMMENT}
 "-ireplace"     { return COIREPLACE;}
 "-creplace"     { return COCREPLACE;}
 
+{VARIABLE}      { return NAME; }
+{DECLITERAL}    { return NUMBER; }
+{HEXLITERAL}    { return NUMBER; }
 
+
+// oh no
+.               {   return WRONG; }

@@ -15,8 +15,7 @@ public class PsString extends PsPsiElement implements PsiLiteral {
         return "Compound PsString";
     }
 
-    public PsStringInjection[] getInjections()
-    {
+    public PsStringInjection[] getInjections() {
         return findChildrenByClass(PsStringInjection.class);
     }
 
@@ -27,6 +26,6 @@ public class PsString extends PsPsiElement implements PsiLiteral {
 
     @Override
     public Object getValue() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 }

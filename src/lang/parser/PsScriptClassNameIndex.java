@@ -5,9 +5,9 @@ import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 
 public class PsScriptClassNameIndex extends StringStubIndexExtension<PsFile> {
-  public static final StubIndexKey<String, PsFile> KEY = StubIndexKey.createIndexKey("ps1.script.class");
+    public static final StubIndexKey<String, PsFile> KEY = StubIndexKey.createIndexKey("ps1.script.class");
 
-  public StubIndexKey<String, PsFile> getKey() {
-    return KEY;
-  }
+    public StubIndexKey<String, PsFile> getKey() {
+        return KEY;
+    }
 }

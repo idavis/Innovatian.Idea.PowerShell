@@ -65,8 +65,7 @@ public class PsParser implements PsiParser, PsElementTypes {
     }
 
     public void parseSourceElement(PsiBuilder builder) {
-        if(StringConstructorExpression.parse(builder, this) != WRONGWAY)
-        {
+        if (StringConstructorExpression.parse(builder, this) != WRONGWAY) {
             return;
         }
         if (ExpressionStatement.parse(builder, this)) {
@@ -251,8 +250,7 @@ if (PsTokenTypes.FOR.equals(builder.getTokenType())) {
             parseStatement(builder, false);
             return true;
         }
-        if(PsTokenTypes.IDENT.equals(builder.getTokenType() ))
-        {
+        if (PsTokenTypes.IDENT.equals(builder.getTokenType())) {
             ParserUtils.wrapError(builder, "identifier.expected");
             parseStatement(builder, false);
             return true;

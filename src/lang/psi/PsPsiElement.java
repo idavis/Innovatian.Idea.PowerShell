@@ -5,7 +5,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class PsPsiElement extends ASTWrapperPsiElement implements IPsPsiElement{
+public abstract class PsPsiElement extends ASTWrapperPsiElement implements IPsPsiElement {
     public PsPsiElement(@NotNull ASTNode astNode) {
         super(astNode);
     }

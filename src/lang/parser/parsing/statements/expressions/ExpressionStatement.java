@@ -10,8 +10,7 @@ public class ExpressionStatement implements PsElementTypes {
 
     @Nullable
     private static IElementType parseExpressionStatement(PsiBuilder builder, PsParser parser) {
-        if(ComparisonExpressionStatement.parse(builder, parser))
-        {
+        if (ComparisonExpressionStatement.parse(builder, parser)) {
             return CONDITIONAL_EXPRESSION;
         }
         return WRONGWAY;

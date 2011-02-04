@@ -6,7 +6,7 @@ import com.innovatian.idea.powershell.lang.psi.api.statements.expressions.litera
 
 public abstract class PsElementVisitor {
     public void visitElement(IPsPsiElement element) {
-        String s;
+
     }
 
     public void visitFile(PsFile file) {

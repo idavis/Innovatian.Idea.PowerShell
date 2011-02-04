@@ -7,24 +7,24 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 
 public class PsFileStub extends PsiFileStubImpl<PsFile> {
-  private final StringRef fileName;
+    private final StringRef fileName;
 
 
-  public PsFileStub(PsFile file) {
-    super(file);
-    fileName = StringRef.fromString(StringUtil.trimEnd(file.getName(), ".ps1"));
-  }
+    public PsFileStub(PsFile file) {
+        super(file);
+        fileName = StringRef.fromString(StringUtil.trimEnd(file.getName(), ".ps1"));
+    }
 
-  public PsFileStub(StringRef name) {
-    super(null);
-    fileName = name;
-  }
+    public PsFileStub(StringRef name) {
+        super(null);
+        fileName = name;
+    }
 
-  public IStubFileElementType getType() {
-    return PsParserDefinition.PS_FILE;
-  }
+    public IStubFileElementType getType() {
+        return PsParserDefinition.PS_FILE;
+    }
 
-  public StringRef getName() {
-    return fileName;
-  }
+    public StringRef getName() {
+        return fileName;
+    }
 }

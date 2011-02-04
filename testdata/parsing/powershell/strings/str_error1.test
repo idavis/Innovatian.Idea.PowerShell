@@ -1,0 +1,12 @@
+i = "
+-----
+PowerShell script
+  Assignment expression
+    PsiElement(identifier)('i')
+    PsiWhiteSpace(' ')
+    PsiElement(=)('=')
+    PsiWhiteSpace(' ')
+    Compound PsString
+      PsiElement(PsString begin)('"')
+      PsiErrorElement:String end expected
+        <empty list>

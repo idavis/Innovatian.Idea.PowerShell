@@ -1,5 +1,6 @@
 package com.innovatian.idea.powershell;
 
+import com.innovatian.idea.powershell.lang.PsIcons;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NonNls;
@@ -17,7 +18,7 @@ public class PsFileType extends LanguageFileType {
     public static final String DEFAULT_EXTENSION = "ps1";
 
     private PsFileType() {
-        super(new PowerShellLanguage());
+        super(new PsLanguage());
     }
 
     @NotNull
@@ -29,7 +30,7 @@ public class PsFileType extends LanguageFileType {
     @NonNls
     @NotNull
     public String getDescription() {
-        return "PowerShell Files";
+        return "PowerShell File";
     }
 
     @NotNull
@@ -39,7 +40,7 @@ public class PsFileType extends LanguageFileType {
     }
 
     public Icon getIcon() {
-        return null;
+        return PsIcons.FileIcon;
     }
 
 //  public EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {

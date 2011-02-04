@@ -2,9 +2,9 @@ package com.innovatian.idea.powershell;
 
 import com.intellij.lang.Language;
 
-public class PowerShellLanguage extends Language {
+public class PsLanguage extends Language {
 
-    public PowerShellLanguage() {
+    public PsLanguage() {
         super("PowerShell");
     }
 

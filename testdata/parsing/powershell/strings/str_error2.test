@@ -1,0 +1,16 @@
+st = "
+3
+-----
+PowerShell script
+  Assignment expression
+    PsiElement(identifier)('st')
+    PsiWhiteSpace(' ')
+    PsiElement(=)('=')
+    PsiWhiteSpace(' ')
+    Compound PsString
+      PsiElement(PsString begin)('"')
+      PsiErrorElement:String end expected
+        <empty list>
+  PsiElement(new line)('\n')
+  Literal
+    PsiElement(Integer)('3')

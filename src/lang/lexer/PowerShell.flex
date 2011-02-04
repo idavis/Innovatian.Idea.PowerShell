@@ -19,13 +19,41 @@ import org.jetbrains.annotations.NotNull;
 %eof{ return;
 %eof}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////// User code //////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+%{
+
+  private Stack <IElementType> gStringStack = new Stack<IElementType>();
+  private Stack <IElementType> blockStack = new Stack<IElementType>();
+
+  private int afterComment = YYINITIAL;
+
+  private void clearStacks(){
+    gStringStack.clear();
+    blockStack.clear();
+  }
+
+  private Stack<IElementType> braceCount = new Stack <IElementType>();
+
+%}
+
 %init{
 %init}
 
-%x XSTRINGQ
-%x XSTRINGA
+%xstate IN_SINGLE_EXPSTRING_DOLLAR
+%xstate IN_SINGLE_EXPSTRING
+%xstate IN_SINGLE_IDENT
+%xstate IN_SINGLE_DOT
+%xstate IN_SINGLE_QUOTESTRING
 
-VARIABLE = \$[A-Za-z]+ | \$\{.+\}
+%xstate NLS_AFTER_LBRACE
+
+
+%state IN_INNER_BLOCK
+
+//VARIABLE = \$[A-Za-z]+ | \$\{.+\}
 PARAMETERARGUMENTTOKEN = [^-($0-9].*[^ \t]
 PARAMETERTOKEN = -[A-Za-z]+[:]{PARAMETERARGUMENTTOKEN}
 CALLARGUMENTSEPARATOR= ' |'
@@ -36,6 +64,11 @@ HEXDIGIT       =       [0-9A-Fa-f]
 DECLITERAL     =       {DECDIGIT}+
 HEXLITERAL     =       0[xX]{HEXDIGIT}+
 
+LETTER = [:letter:] | "_"
+
+IDENT = ({LETTER}|\$) ({LETTER} | {DECDIGIT} | \$)*
+IDENT_NOBUCKS = {LETTER} ({LETTER} | {DECDIGIT})*
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// NewLines and spaces /////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,11 +78,35 @@ WS = " " | \t | \f | \\ {ONE_NL}                          // Whitespaces
 NLS = {ONE_NL}({ONE_NL}|{WS})*
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Strings /////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+STRING_NL = {ONE_NL}
+STRING_ESC = \\ [^]
+
+SINGLE_QUOTED_STRING_BEGIN = "\'"
+
+SINGLE_QUOTED_STRING_CONTENT = ( {STRING_ESC} | "\"" | [^\\\'\r\n] | "$" )*
+SINGLE_QUOTED_STRING = {SINGLE_QUOTED_STRING_BEGIN} \'
+
+STRING_LITERAL = {SINGLE_QUOTED_STRING}
+
+
+// Single-double-quoted strings
+EXPSTRING_SINGLE_CONTENT = ({STRING_ESC}
+    | [^\\\"\r\n"$"]
+    | "\'" )+
+
+EXPSTRING_LITERAL = \"\"
+    | \" ([^\\\"\n\r"$"] | {STRING_ESC})? {EXPSTRING_SINGLE_CONTENT} \"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Comments ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 C_STYLE_COMMENT=("/*" [^"*"] {COMMENT_TAIL} ) | "/*"
 COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
+
 
 %%
 
@@ -60,36 +117,91 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 ////////// Strings /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-"\""         { yybegin(XSTRINGQ);  return EXPSTRING; }
-'            { yybegin(XSTRINGA); return STRING; }
-
-<XSTRINGQ>
+<IN_SINGLE_QUOTESTRING>
 {
-  \"\"       {yybegin(XSTRINGQ); return EXPSTRING;}
-  \"         { yybegin(YYINITIAL); return EXPSTRING; }
-  \\[abfnrt] {return EXPSTRING;}
-  "$"        { return DOLLAR;  }
-  "{"        { return LCURLY;}
-  "}"        { return RCURLY;}
-  \\\n       {yybegin(YYINITIAL);return WRONG;}
-  \\\"       {return EXPSTRING; }
-  \\'        {return EXPSTRING;}
-  \\\\       { return EXPSTRING; }
-  {NLS}  { yybegin(YYINITIAL); return WRONG; }
-  .          {return EXPSTRING;}
+  {SINGLE_QUOTED_STRING_CONTENT}           { return EXPSTRING_CONTENT; }
+  \\                                       {  return EXPSTRING_CONTENT; }
+  \'           { yybegin(YYINITIAL); return EXPSTRING_END; }
+  {NLS}        { return WRONG;  }
 }
 
-<XSTRINGA>
-{
-  ''         { yybegin(XSTRINGA); return STRING; }
-  '          { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrt] { return STRING; }
-  \\\n       { yybegin(YYINITIAL);return WRONG; }
-  \\\'       { return STRING; }
-  \\'        { yybegin(YYINITIAL); return STRING; }
-  \\\\       { return STRING; }
-  {NLS}  { yybegin(YYINITIAL);return WRONG;  }
-  .          { return STRING; }
+{SINGLE_QUOTED_STRING_BEGIN}               {  yybegin(IN_SINGLE_QUOTESTRING); return EXPSTRING_BEGIN; }
+
+
+// Expando Strings
+\"                                                         {  yybegin(IN_SINGLE_EXPSTRING);
+                                                              gStringStack.push(LPAREN);
+                                                              return EXPSTRING_BEGIN; }
+
+{EXPSTRING_LITERAL}                                         {  return EXPSTRING_LITERAL; }
+
+// Single double-quoted Expando String
+<IN_SINGLE_IDENT>{
+  {IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT);
+                                             return IDENT;  }
+  [^]                                     {  yypushback(1);
+                                             yybegin(IN_SINGLE_EXPSTRING);  }
+}
+<IN_SINGLE_DOT>{
+  "." /{IDENT_NOBUCKS}                   {  yybegin(IN_SINGLE_IDENT);
+                                             return DOT;  }
+  [^]                                     {  yypushback(1);
+                                             yybegin(IN_SINGLE_EXPSTRING);  }
+}
+
+<IN_SINGLE_EXPSTRING_DOLLAR> {
+
+"begin"        { return BEGIN; }
+"break"        { return BREAK; }
+"catch"        { return CATCH; }
+"continue"     { return CONTINUE; }
+"data"         { return DATA; }
+"do"           { return DO; }
+"else"         { return ELSE; }
+"elseif"       { return ELSEIF; }
+"end"          { return END; }
+"exit"         { return EXIT; }
+"filter"       { return FILTER; }
+"finally"      { return FINALLY; }
+"for"          { return FOR; }
+"function"     { return FUNCTION; }
+"if"           { return IF; }
+"in"           { return IN; }
+"param"        { return PARAM; }
+"process"      { return PROCESS; }
+"return"       { return RETURN; }
+"switch"       { return SWITCH; }
+"throw"        { return THROW; }
+"try"          { return TRY; }
+"trap"         { return TRAP; }
+"while"        { return WHILE; }
+"until"        { return UNTIL; }
+
+  {IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT);
+                                             return IDENT; }
+  "{"                                     {  blockStack.push(LPAREN);
+                                             yybegin(IN_INNER_BLOCK);
+                                             return LCURLY; }
+  [^]                                     {  yypushback(1);
+                                             yybegin(IN_SINGLE_EXPSTRING); }
+}
+<IN_INNER_BLOCK>{
+  "}"                                     {  if (!blockStack.isEmpty()) {
+                                               IElementType br = blockStack.pop();
+                                             }
+                                             return RCURLY; }
+{IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT); return IDENT; }
+"."              { return WRONG; }
+}
+<IN_SINGLE_EXPSTRING> {
+  {EXPSTRING_SINGLE_CONTENT} (\\)?         {  return EXPSTRING_CONTENT; }
+  \\                                      {  return EXPSTRING_CONTENT; }
+
+  \"                                      {  yybegin(YYINITIAL); return EXPSTRING_END; }
+  "$"                                     {  yybegin(IN_SINGLE_EXPSTRING_DOLLAR);
+                                             return DOLLAR;
+                                          }
+  {NLS}                                  {  return WRONG; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +323,6 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 "-ireplace"     { return COIREPLACE;}
 "-creplace"     { return COCREPLACE;}
 
-{VARIABLE}      { return NAME; }
 {DECLITERAL}    { return NUMBER; }
 {HEXLITERAL}    { return NUMBER; }
 

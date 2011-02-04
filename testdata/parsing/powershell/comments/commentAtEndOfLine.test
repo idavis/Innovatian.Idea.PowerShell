@@ -1,0 +1,5 @@
+5#A
+-----
+PowerShell script
+  PsiElement(number)('5')
+  PsiComment(line comment)('#A')

@@ -1,0 +1,8 @@
+"7" -eq "7"
+-----
+PowerShell script
+  PsiElement(string)('7')
+  PsiWhiteSpace(' ')
+  PsiElement(-eq)('-eq')
+  PsiWhiteSpace(' ')
+  PsiElement(string)('7')

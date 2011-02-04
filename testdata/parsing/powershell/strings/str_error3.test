@@ -1,0 +1,8 @@
+"\
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('\')
+    PsiErrorElement:String end expected
+      <empty list>

@@ -1,0 +1,16 @@
+else
+{1+2}
+-----
+PowerShell script
+  PsiErrorElement:'else' without 'if'
+    PsiElement(else)('else')
+  PsiElement(new line)('\n')
+  Closable block
+    PsiElement({)('{')
+    Additive expression
+      Literal
+        PsiElement(Integer)('1')
+      PsiElement(+)('+')
+      Literal
+        PsiElement(Integer)('2')
+    PsiElement(})('}')

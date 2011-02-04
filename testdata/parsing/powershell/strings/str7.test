@@ -1,0 +1,7 @@
+"$Preved, medved!"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('$Preved, medved!')
+    PsiElement(PsString end)('"')

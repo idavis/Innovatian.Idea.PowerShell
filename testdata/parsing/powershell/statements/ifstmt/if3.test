@@ -1,0 +1,21 @@
+if (expr1)
+expr2
+;
+else
+expr3
+-----
+PowerShell script
+  IF statement
+    PsiElement(if)('if')
+    PsiWhiteSpace(' ')
+    PsiElement(()('(')
+    PsiElement(identifier)('expr1')
+    PsiElement())(')')
+    PsiElement(new line)('\n')
+    PsiElement(identifier)('expr2')
+    PsiElement(new line)('\n')
+    PsiElement(;)(';')
+    PsiElement(new line)('\n')
+    PsiElement(else)('else')
+    PsiElement(new line)('\n')
+    PsiElement(identifier)('expr3')

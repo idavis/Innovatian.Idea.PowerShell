@@ -1,0 +1,15 @@
+"aaa $a bbb $c fff"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('aaa ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('a')
+    PsiElement(PsString content)(' bbb ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('c')
+    PsiElement(PsString content)(' fff')
+    PsiElement(PsString end)('"')

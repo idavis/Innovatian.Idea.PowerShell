@@ -1,0 +1,15 @@
+"My $aaa your $bbb string"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('My ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('aaa')
+    PsiElement(PsString content)(' your ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('bbb')
+    PsiElement(PsString content)(' string')
+    PsiElement(PsString end)('"')

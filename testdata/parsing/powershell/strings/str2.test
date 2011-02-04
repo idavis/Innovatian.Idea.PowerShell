@@ -1,0 +1,7 @@
+'aaa $a bbb $c fff'
+-----
+PowerShell script
+  Literal
+    PsiElement(PsString begin)(''')
+    PsiElement(PsString content)('aaa $a bbb $c fff')
+    PsiElement(PsString end)(''')

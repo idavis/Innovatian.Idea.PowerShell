@@ -1,0 +1,27 @@
+"My $str nax"
+"My ${str}$ing nax"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('My ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('str')
+    PsiElement(PsString content)(' nax')
+    PsiElement(PsString end)('"')
+  PsiElement(new line)('\n')
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('My ')
+    PsString injection
+      PsiElement($)('$')
+      Closable block
+        PsiElement({)('{')
+        PsiElement(identifier)('str')
+        PsiElement(})('}')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('ing')
+    PsiElement(PsString content)(' nax')
+    PsiElement(PsString end)('"')

@@ -1,0 +1,11 @@
+"aaaa $str... bbb"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsiElement(PsString content)('aaaa ')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('str')
+    PsiElement(PsString content)('... bbb')
+    PsiElement(PsString end)('"')

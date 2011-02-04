@@ -54,7 +54,7 @@ public abstract class PsParsingTestContext extends CodeInsightFixtureTestCase {
 
     @Override
     public String getTestDataPath() {
-        return "C:/Development/OpenSource/Innovatian.Idea.PowerShell/testdata/parsing/powershell/";
+        return PsParsingTestContext.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "../../../testdata/parsing/powershell/";
     }
 
     public static List<String> readInput(String filePath) {

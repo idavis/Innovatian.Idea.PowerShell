@@ -1,20 +1,30 @@
 <idea-plugin version="2">
-    <name>Innovatian.Idea.PowerShell</name>
-    <description>short description of the plugin</description>
-    <version>1.0</version>
-    <vendor>YourCompany</vendor>
+    <name>PowerShell</name>
+    <description>PowerShell support for IntelliJ IDEA</description>
+    <version>0.01</version>
+    <vendor>Innovatian Software, LLC</vendor>
     <idea-version since-build="8000"/>
 
     <application-components>
         <!-- Add your application components here -->
+        <component>
+            <implementation-class>com.innovatian.idea.powershell.PsSupportLoader</implementation-class>
+        </component>
     </application-components>
 
     <project-components>
         <!-- Add your project components here -->
+        <component>
+            <implementation-class>com.innovatian.idea.powershell.lang.psi.PsPsiManager</implementation-class>
+        </component>
     </project-components>
 
     <actions>
         <!-- Add your actions here -->
+        <action id="Ps.NewPsScript" class="com.innovatian.idea.powershell.actions.NewPsFileAction"
+                text="PowerShell Script" description="Create new PowerShell script file">
+            <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -22,6 +32,7 @@
         <lang.parserDefinition language="PowerShell"
                                implementationClass="com.innovatian.idea.powershell.lang.parser.PsParserDefinition"/>
         <projectService serviceInterface="com.innovatian.idea.powershell.lang.psi.PsPsiElementFactory"
-                    serviceImplementation="com.innovatian.idea.powershell.lang.psi.PsPsiElementFactoryImpl"/>
+                        serviceImplementation="com.innovatian.idea.powershell.lang.psi.PsPsiElementFactoryImpl"/>
+        <lang.syntaxHighlighterFactory key="PowerShell" implementationClass="com.innovatian.idea.powershell.highlighter.PsSyntaxHighlighterFactory" />
     </extensions>
 </idea-plugin>

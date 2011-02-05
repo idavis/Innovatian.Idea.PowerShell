@@ -1,10 +1,16 @@
 package com.innovatian.idea.powershell;
 
+import com.innovatian.idea.powershell.highlighter.PsEditorHighlighter;
 import com.innovatian.idea.powershell.lang.PsIcons;
 import com.intellij.lang.Language;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -43,7 +49,7 @@ public class PsFileType extends LanguageFileType {
         return PsIcons.FileIcon;
     }
 
-//  public EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
-//    return new PsEditorHighlighter(colors, project, virtualFile);
-//  }
+    public EditorHighlighter getEditorHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
+        return new PsEditorHighlighter(colors, project, virtualFile);
+    }
 }

@@ -82,10 +82,10 @@ NLS = {ONE_NL}({ONE_NL}|{WS})*
 STRING_NL = {ONE_NL}
 STRING_ESC = \\ [^]
 
-SINGLE_QUOTED_STRING_BEGIN = "\'"
+SINGLE_QUOTED_STRING_BEGIN = \'
 
 SINGLE_QUOTED_STRING_CONTENT = ( {STRING_ESC} | "\"" | [^\\\'\r\n] | "$" )*
-SINGLE_QUOTED_STRING = {SINGLE_QUOTED_STRING_BEGIN} \'
+SINGLE_QUOTED_STRING = {SINGLE_QUOTED_STRING_BEGIN} {SINGLE_QUOTED_STRING_CONTENT} \'
 
 STRING_LITERAL = {SINGLE_QUOTED_STRING}
 
@@ -115,15 +115,7 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 ////////// Strings /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-<IN_SINGLE_QUOTESTRING>
-{
-  {SINGLE_QUOTED_STRING_CONTENT}           { return EXPSTRING_CONTENT; }
-  \\                                       {  return EXPSTRING_CONTENT; }
-  \'           { yybegin(YYINITIAL); return EXPSTRING_END; }
-  {NLS}        { return WRONG;  }
-}
-
-{SINGLE_QUOTED_STRING_BEGIN}               {  yybegin(IN_SINGLE_QUOTESTRING); return EXPSTRING_BEGIN; }
+{STRING_LITERAL}               { return STRING_LITERAL; }
 
 
 // Expando Strings

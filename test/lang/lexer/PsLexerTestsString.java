@@ -65,4 +65,48 @@ public class PsLexerTestsString extends PsLexerTestContext {
         lexer.advance();
         Assert.assertNull(lexer.getTokenType());
     }
+
+    public void testEmptyDoubleQuotedString() {
+        final String toParse = "\"\"";
+        lexer.start(toParse);
+
+        Assert.assertEquals(PsTokenTypes.EXPSTRING_LITERAL, lexer.getTokenType());
+        Assert.assertEquals("\"\"", lexer.getTokenText());
+
+        lexer.advance();
+        Assert.assertNull(lexer.getTokenType());
+    }
+
+    public void testEmptySingleQuotedString() {
+        final String toParse = "\'\'";
+        lexer.start(toParse);
+
+        Assert.assertEquals(PsTokenTypes.STRING_LITERAL, lexer.getTokenType());
+        Assert.assertEquals("\'\'", lexer.getTokenText());
+
+        lexer.advance();
+        Assert.assertNull(lexer.getTokenType());
+    }
+
+    public void testSingleQuotedStringWithWithIdentifier() {
+        final String toParse = "\'$value\'";
+        lexer.start(toParse);
+
+        Assert.assertEquals(PsTokenTypes.STRING_LITERAL, lexer.getTokenType());
+        Assert.assertEquals("\'$value\'", lexer.getTokenText());
+
+        lexer.advance();
+        Assert.assertNull(lexer.getTokenType());
+    }
+
+    public void testSingleQuotedStringWithWithIdentifierInCurlyBraces() {
+        final String toParse = "\'${value}\'";
+        lexer.start(toParse);
+
+        Assert.assertEquals(PsTokenTypes.STRING_LITERAL, lexer.getTokenType());
+        Assert.assertEquals("\'${value}\'", lexer.getTokenText());
+
+        lexer.advance();
+        Assert.assertNull(lexer.getTokenType());
+    }
 }

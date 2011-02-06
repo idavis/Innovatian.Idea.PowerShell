@@ -28,6 +28,8 @@ public interface PsTokenTypes {
 
     IElementType IDENT = new PsElementType("identifier");
     IElementType IDENT_NOBUCKS = new PsElementType("identifier");
+    IElementType CMDLET = new PsElementType("cmdlet");
+    IElementType ALIAS = new PsElementType("alias");
 
     /* **************************************************************************************************
    *  Integers & floats
@@ -79,6 +81,8 @@ public interface PsTokenTypes {
     IElementType MOD = new PsElementType("%");
 
     IElementType DOLLAR = new PsElementType("$");
+    IElementType IMPLICITVAR = new PsElementType("$__");
+    IElementType LASTTOKEN = new PsElementType("$$");
 
     /* **************************************************************************************************
    * assignment operators

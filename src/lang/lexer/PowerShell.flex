@@ -163,6 +163,8 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
   {NLS}                                  {  return WRONG; }
 }
 
+{IDENT}        { return IDENT;}
+ 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Keywords ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +225,9 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 "."          { return DOT;}
 "^"          { return EXP;}
 {NLS}        { return NEWLINE; }
-"$"          { return DOLLAR;  }
+//"$__"        { return IMPLICITVAR; } // having trouble with this.
+"$$"         { return LASTTOKEN; }
+"$" [^_$]          { return DOLLAR;  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////      Comparison Operators      ///////////////////////////////////////////////////////////////////
@@ -285,6 +289,242 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 {DECLITERAL}    { return NUMBER; }
 {HEXLITERAL}    { return NUMBER; }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////      Commandlets      ////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+"add-content"    { return CMDLET; }
+"add-history"    { return CMDLET; }
+"add-member"    { return CMDLET; }
+"add-pssnapin"    { return CMDLET; }
+"clear-content"    { return CMDLET; }
+"clear-item"    { return CMDLET; }
+"clear-itemproperty"    { return CMDLET; }
+"clear-variable"    { return CMDLET; }
+"compare-object"    { return CMDLET; }
+"convertfrom-securestring"    { return CMDLET; }
+"convert-path"    { return CMDLET; }
+"convertto-html"    { return CMDLET; }
+"convertto-securestring"    { return CMDLET; }
+"copy-item"    { return CMDLET; }
+"copy-itemproperty"    { return CMDLET; }
+"export-alias"    { return CMDLET; }
+"export-clixml"    { return CMDLET; }
+"export-console"    { return CMDLET; }
+"export-csv"    { return CMDLET; }
+"foreach-object"    { return CMDLET; }
+"format-custom"    { return CMDLET; }
+"format-list"    { return CMDLET; }
+"format-table"    { return CMDLET; }
+"format-wide"    { return CMDLET; }
+"get-acl"    { return CMDLET; }
+"get-alias"    { return CMDLET; }
+"get-authenticodesignature"    { return CMDLET; }
+"get-childitem"    { return CMDLET; }
+"get-command"    { return CMDLET; }
+"get-content"    { return CMDLET; }
+"get-credential"    { return CMDLET; }
+"get-culture"    { return CMDLET; }
+"get-date"    { return CMDLET; }
+"get-eventlog"    { return CMDLET; }
+"get-executionpolicy"    { return CMDLET; }
+"get-help"    { return CMDLET; }
+"get-history"    { return CMDLET; }
+"get-host"    { return CMDLET; }
+"get-item"    { return CMDLET; }
+"get-itemproperty"    { return CMDLET; }
+"get-location"    { return CMDLET; }
+"get-member"    { return CMDLET; }
+"get-pfxcertificate"    { return CMDLET; }
+"get-process"    { return CMDLET; }
+"get-psdrive"    { return CMDLET; }
+"get-psprovider"    { return CMDLET; }
+"get-pssnapin"    { return CMDLET; }
+"get-service"    { return CMDLET; }
+"get-tracesource"    { return CMDLET; }
+"get-uiculture"    { return CMDLET; }
+"get-unique"    { return CMDLET; }
+"get-variable"    { return CMDLET; }
+"get-wmiobject"    { return CMDLET; }
+"group-object"    { return CMDLET; }
+"import-alias"    { return CMDLET; }
+"import-clixml"    { return CMDLET; }
+"import-csv"    { return CMDLET; }
+"invoke-expression"    { return CMDLET; }
+"invoke-history"    { return CMDLET; }
+"invoke-item"    { return CMDLET; }
+"join-path"    { return CMDLET; }
+"measure-command"    { return CMDLET; }
+"measure-object"    { return CMDLET; }
+"move-item"    { return CMDLET; }
+"move-itemproperty"    { return CMDLET; }
+"new-alias"    { return CMDLET; }
+"new-item"    { return CMDLET; }
+"new-itemproperty"    { return CMDLET; }
+"new-object"    { return CMDLET; }
+"new-psdrive"    { return CMDLET; }
+"new-service"    { return CMDLET; }
+"new-timespan"    { return CMDLET; }
+"new-variable"    { return CMDLET; }
+"out-default"    { return CMDLET; }
+"out-file"    { return CMDLET; }
+"out-host"    { return CMDLET; }
+"out-null"    { return CMDLET; }
+"out-printer"    { return CMDLET; }
+"out-string"    { return CMDLET; }
+"pop-location"    { return CMDLET; }
+"push-location"    { return CMDLET; }
+"read-host"    { return CMDLET; }
+"remove-item"    { return CMDLET; }
+"remove-itemproperty"    { return CMDLET; }
+"remove-psdrive"    { return CMDLET; }
+"remove-pssnapin"    { return CMDLET; }
+"remove-variable"    { return CMDLET; }
+"rename-item"    { return CMDLET; }
+"rename-itemproperty"    { return CMDLET; }
+"resolve-path"    { return CMDLET; }
+"restart-service"    { return CMDLET; }
+"resume-service"    { return CMDLET; }
+"select-object"    { return CMDLET; }
+"select-string"    { return CMDLET; }
+"set-acl"    { return CMDLET; }
+"set-alias"    { return CMDLET; }
+"set-authenticodesignature"    { return CMDLET; }
+"set-content"    { return CMDLET; }
+"set-date"    { return CMDLET; }
+"set-executionpolicy"    { return CMDLET; }
+"set-item"    { return CMDLET; }
+"set-itemproperty"    { return CMDLET; }
+"set-location"    { return CMDLET; }
+"set-psdebug"    { return CMDLET; }
+"set-service"    { return CMDLET; }
+"set-tracesource"    { return CMDLET; }
+"set-variable"    { return CMDLET; }
+"sort-object"    { return CMDLET; }
+"split-path"    { return CMDLET; }
+"start-service"    { return CMDLET; }
+"start-sleep"    { return CMDLET; }
+"start-transcript"    { return CMDLET; }
+"stop-process"    { return CMDLET; }
+"stop-service"    { return CMDLET; }
+"stop-transcript"    { return CMDLET; }
+"suspend-service"    { return CMDLET; }
+"tee-object"    { return CMDLET; }
+"test-path"    { return CMDLET; }
+"trace-command"    { return CMDLET; }
+"update-formatdata"    { return CMDLET; }
+"update-typedata"    { return CMDLET; }
+"where-object"    { return CMDLET; }
+"write-debug"    { return CMDLET; }
+"write-error"    { return CMDLET; }
+"write-host"    { return CMDLET; }
+"write-output"    { return CMDLET; }
+"write-progress"    { return CMDLET; }
+"write-verbose"    { return CMDLET; }
+"write-warning"    { return CMDLET; }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////      Aliases      ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+"ac"    { return ALIAS; }
+"asnp"    { return ALIAS; }
+"clc"    { return ALIAS; }
+"cli"    { return ALIAS; }
+"clp"    { return ALIAS; }
+"clv"    { return ALIAS; }
+"cpi"    { return ALIAS; }
+"cpp"    { return ALIAS; }
+"cvpa"    { return ALIAS; }
+"diff"    { return ALIAS; }
+"epal"    { return ALIAS; }
+"epcsv"    { return ALIAS; }
+"fc"    { return ALIAS; }
+"fl"    { return ALIAS; }
+"foreach"    { return ALIAS; }
+"ft"    { return ALIAS; }
+"fw"    { return ALIAS; }
+"gal"    { return ALIAS; }
+"gc"    { return ALIAS; }
+"gci"    { return ALIAS; }
+"gcm"    { return ALIAS; }
+"gdr"    { return ALIAS; }
+"ghy"    { return ALIAS; }
+"gi"    { return ALIAS; }
+"gl"    { return ALIAS; }
+"gm"    { return ALIAS; }
+"gp"    { return ALIAS; }
+"gps"    { return ALIAS; }
+"group"    { return ALIAS; }
+"gsv"    { return ALIAS; }
+"gsnp"    { return ALIAS; }
+"gu"    { return ALIAS; }
+"gv"    { return ALIAS; }
+"gwmi"    { return ALIAS; }
+"iex"    { return ALIAS; }
+"ihy"    { return ALIAS; }
+"ii"    { return ALIAS; }
+"ipal"    { return ALIAS; }
+"ipcsv"    { return ALIAS; }
+"mi"    { return ALIAS; }
+"mp"    { return ALIAS; }
+"nal"    { return ALIAS; }
+"ndr"    { return ALIAS; }
+"ni"    { return ALIAS; }
+"nv"    { return ALIAS; }
+"oh"    { return ALIAS; }
+"rdr"    { return ALIAS; }
+"ri"    { return ALIAS; }
+"rni"    { return ALIAS; }
+"rnp"    { return ALIAS; }
+"rp"    { return ALIAS; }
+"rsnp"    { return ALIAS; }
+"rv"    { return ALIAS; }
+"rvpa"    { return ALIAS; }
+"sal"    { return ALIAS; }
+"sasv"    { return ALIAS; }
+"sc"    { return ALIAS; }
+"select"    { return ALIAS; }
+"si"    { return ALIAS; }
+"sl"    { return ALIAS; }
+"sleep"    { return ALIAS; }
+"sort"    { return ALIAS; }
+"sp"    { return ALIAS; }
+"spps"    { return ALIAS; }
+"spsv"    { return ALIAS; }
+"sv"    { return ALIAS; }
+"tee"    { return ALIAS; }
+"where"    { return ALIAS; }
+"write"    { return ALIAS; }
+"cat"    { return ALIAS; }
+"cd"    { return ALIAS; }
+"clear"    { return ALIAS; }
+"cp"    { return ALIAS; }
+"h"    { return ALIAS; }
+"history"    { return ALIAS; }
+"kill"    { return ALIAS; }
+"lp"    { return ALIAS; }
+"ls"    { return ALIAS; }
+"mount"    { return ALIAS; }
+"mv"    { return ALIAS; }
+"popd"    { return ALIAS; }
+"ps"    { return ALIAS; }
+"pushd"    { return ALIAS; }
+"pwd"    { return ALIAS; }
+"r"    { return ALIAS; }
+"rm"    { return ALIAS; }
+"rmdir"    { return ALIAS; }
+"echo"    { return ALIAS; }
+"cls"    { return ALIAS; }
+"chdir"    { return ALIAS; }
+"copy"    { return ALIAS; }
+"del"    { return ALIAS; }
+"dir"    { return ALIAS; }
+"erase"    { return ALIAS; }
+"move"    { return ALIAS; }
+"rd"    { return ALIAS; }
+"ren"    { return ALIAS; }
+"set"    { return ALIAS; }
+"type"    { return ALIAS; }
 
 // oh no
 .               {   return WRONG; }

@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <name>PowerShell</name>
     <description>PowerShell support for IntelliJ IDEA</description>
-    <version>0.01</version>
+    <version>0.02</version>
     <vendor>Innovatian Software, LLC</vendor>
     <idea-version since-build="8000"/>
 

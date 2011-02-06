@@ -1,7 +1,8 @@
-i = "
+$i = "
 -----
 PowerShell script
   Assignment expression
+    PsiElement($)('$')
     PsiElement(identifier)('i')
     PsiWhiteSpace(' ')
     PsiElement(=)('=')

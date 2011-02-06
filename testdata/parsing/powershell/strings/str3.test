@@ -1,0 +1,9 @@
+"$a"
+-----
+PowerShell script
+  Compound PsString
+    PsiElement(PsString begin)('"')
+    PsString injection
+      PsiElement($)('$')
+      PsiElement(identifier)('a')
+    PsiElement(PsString end)('"')

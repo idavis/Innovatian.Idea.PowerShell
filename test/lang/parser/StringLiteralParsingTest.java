@@ -14,6 +14,19 @@ public class StringLiteralParsingTest extends PsParsingTestContext {
         doTest();
     }
 
+
+    public void testStr3() throws Throwable {
+        doTest();
+    }
+
+    public void testStr4() throws Throwable {
+        doTest();
+    }
+
+    public void testStr5() throws Throwable {
+        doTest();
+    }
+
     public void testStr6() throws Throwable {
         doTest();
     }

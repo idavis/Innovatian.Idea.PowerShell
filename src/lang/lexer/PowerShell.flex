@@ -24,14 +24,11 @@ import org.jetbrains.annotations.NotNull;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 %{
-
-  private Stack <IElementType> gStringStack = new Stack<IElementType>();
   private Stack <IElementType> blockStack = new Stack<IElementType>();
 
   private int afterComment = YYINITIAL;
 
   private void clearStacks(){
-    gStringStack.clear();
     blockStack.clear();
   }
 
@@ -66,8 +63,9 @@ HEXLITERAL     =       0[xX]{HEXDIGIT}+
 
 LETTER = [:letter:] | "_"
 
-IDENT = ({LETTER}|\$) ({LETTER} | {DECDIGIT} | \$)*
+IDENT = (\$) ({LETTER} | {DECDIGIT} )*
 IDENT_NOBUCKS = {LETTER} ({LETTER} | {DECDIGIT})*
+IDENT_NOBUCKS_CURLY = "{" ({LETTER} ({LETTER} | {DECDIGIT})*) "}"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// NewLines and spaces /////////////////////////////////////////////////////////////////////////////////////////
@@ -129,11 +127,9 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 
 
 // Expando Strings
-\"                                                         {  yybegin(IN_SINGLE_EXPSTRING);
-                                                              gStringStack.push(LPAREN);
-                                                              return EXPSTRING_BEGIN; }
+\"                                         {  yybegin(IN_SINGLE_EXPSTRING); return EXPSTRING_BEGIN; }
 
-{EXPSTRING_LITERAL}                                         {  return EXPSTRING_LITERAL; }
+{EXPSTRING_LITERAL}                        {  return EXPSTRING_LITERAL; }
 
 // Single double-quoted Expando String
 <IN_SINGLE_IDENT>{
@@ -150,35 +146,7 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 }
 
 <IN_SINGLE_EXPSTRING_DOLLAR> {
-
-"begin"        { return BEGIN; }
-"break"        { return BREAK; }
-"catch"        { return CATCH; }
-"continue"     { return CONTINUE; }
-"data"         { return DATA; }
-"do"           { return DO; }
-"else"         { return ELSE; }
-"elseif"       { return ELSEIF; }
-"end"          { return END; }
-"exit"         { return EXIT; }
-"filter"       { return FILTER; }
-"finally"      { return FINALLY; }
-"for"          { return FOR; }
-"function"     { return FUNCTION; }
-"if"           { return IF; }
-"in"           { return IN; }
-"param"        { return PARAM; }
-"process"      { return PROCESS; }
-"return"       { return RETURN; }
-"switch"       { return SWITCH; }
-"throw"        { return THROW; }
-"try"          { return TRY; }
-"trap"         { return TRAP; }
-"while"        { return WHILE; }
-"until"        { return UNTIL; }
-
-  {IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT);
-                                             return IDENT; }
+  {IDENT_NOBUCKS}                         {  return IDENT; }
   "{"                                     {  blockStack.push(LPAREN);
                                              yybegin(IN_INNER_BLOCK);
                                              return LCURLY; }
@@ -186,11 +154,10 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
                                              yybegin(IN_SINGLE_EXPSTRING); }
 }
 <IN_INNER_BLOCK>{
-  "}"                                     {  if (!blockStack.isEmpty()) {
-                                               IElementType br = blockStack.pop();
-                                             }
-                                             return RCURLY; }
-{IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT); return IDENT; }
+{IDENT_NOBUCKS}                        {  /*yybegin(IN_SINGLE_DOT);*/ return IDENT; }
+"}"                                    {  if (!blockStack.isEmpty()) { IElementType br = blockStack.pop(); }
+                                          yybegin(IN_SINGLE_EXPSTRING);
+                                          return RCURLY; }
 "."              { return WRONG; }
 }
 <IN_SINGLE_EXPSTRING> {

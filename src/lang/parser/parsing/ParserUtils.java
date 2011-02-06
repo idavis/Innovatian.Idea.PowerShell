@@ -18,7 +18,8 @@ public abstract class ParserUtils {
     }
 
     public static boolean getToken(PsiBuilder builder, IElementType elem) {
-        if (elem.equals(builder.getTokenType())) {
+        final IElementType tokenType = builder.getTokenType();
+        if (elem.equals(tokenType)) {
             builder.advanceLexer();
             return true;
         }

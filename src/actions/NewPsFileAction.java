@@ -1,6 +1,5 @@
 package com.innovatian.idea.powershell.actions;
 
-import com.innovatian.idea.powershell.Bundle;
 import com.innovatian.idea.powershell.lang.PsIcons;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -9,26 +8,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class NewPsFileAction extends NewPsActionBase {
     public NewPsFileAction() {
-        super(Bundle.message("newfile.menu.action.text"),
-                Bundle.message("newfile.menu.action.description"),
+        super("New PowerShell Script",
+                "New PowerShell Script",
                 PsIcons.FileIcon);
     }
 
-
     protected String getDialogPrompt() {
-        return Bundle.message("newfile.dialog.prompt");
+        return"New PowerShell Script";
     }
 
     protected String getDialogTitle() {
-        return Bundle.message("newfile.dialog.title");
+        return "New PowerShell Script";
     }
 
     protected String getCommandName() {
-        return Bundle.message("newfile.command.name");
+        return "New PowerShell Script";
     }
 
     protected String getActionName(PsiDirectory directory, String newName) {
-        return Bundle.message("newfile.menu.action.text");
+        return "New PowerShell Script";
     }
 
     @NotNull

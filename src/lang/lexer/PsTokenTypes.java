@@ -27,6 +27,7 @@ public interface PsTokenTypes {
    * ****************************************************************************************************/
 
     IElementType IDENT = new PsElementType("identifier");
+    IElementType IDENT_NOBUCKS = new PsElementType("identifier");
 
     /* **************************************************************************************************
    *  Integers & floats

@@ -1,0 +1,11 @@
+"${a}"
+-----
+PowerShell script
+    PsiElement(PsString begin)('"')
+    PsString injection
+      PsiElement($)('$')
+        Closable block
+          PsiElement({)('{')
+          PsiElement(identifier)('a')
+          PsiElement(})('}')
+    PsiElement(PsString end)('"')

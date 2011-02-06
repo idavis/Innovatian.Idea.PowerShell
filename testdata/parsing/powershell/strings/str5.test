@@ -1,0 +1,7 @@
+"7"
+-----
+PowerShell script
+    Literal
+      PsiElement(PsString begin)('"')
+      PsiElement(PsString content)('7')
+      PsiElement(PsString end)('"')

@@ -1,0 +1,15 @@
+iF (expr1) expr2 elSe
+-----
+PowerShell script
+  IF statement
+    PsiElement(if)('if')
+    PsiWhiteSpace(' ')
+    PsiElement(()('(')
+    PsiElement(identifier)('expr1')
+    PsiElement())(')')
+    PsiWhiteSpace(' ')
+    PsiElement(identifier)('expr2')
+    PsiWhiteSpace(' ')
+    PsiElement(else)('else')
+    PsiErrorElement:Expression expected
+      <empty list>

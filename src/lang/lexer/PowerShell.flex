@@ -233,58 +233,58 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 /////////////////////      Comparison Operators      ///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-"-eq"           { return COEQ;}
-"-ne"           { return CONE;}
-"-ge"           { return COGE;}
-"-gt"           { return COGE;}
-"-lt"           { return COLT;}
-"-le"           { return COLE;}
+"-"[Ee][Qq]           { return COEQ;}
+"-"[Nn][Ee]           { return CONE;}
+"-"[Gg][Ee]           { return COGE;}
+"-"[Gg][Tt]           { return COGE;}
+"-"[Ll][Tt]           { return COLT;}
+"-"[Ll][Ee]           { return COLE;}
 
-"-ieq"          { return COIEQ;}
-"-ine"          { return COINE;}
-"-ige"          { return COIGE;}
-"-igt"          { return COIGT;}
-"-ilt"          { return COILT;}
-"-ile"          { return COILE;}
+"-"[Ii][Ee][Qq]          { return COIEQ;}
+"-"[Ii][Nn][Ee]          { return COINE;}
+"-"[Ii][Gg][Gg]          { return COIGE;}
+"-"[Ii][Gg][Tt]          { return COIGT;}
+"-"[Ii][Ll][Tt]          { return COILT;}
+"-"[Ii][Ll][Ee]          { return COILE;}
 
-"-ceq"          { return COCEQ;}
-"-cne"          { return COCNE;}
-"-cge"          { return COCGE;}
-"-cgt"          { return COCGT;}
-"-clt"          { return COCLT;}
-"-cle"          { return COCLE;}
+"-"[Cc][Ee][Qq]          { return COCEQ;}
+"-"[Cc][Nn][Ee]          { return COCNE;}
+"-"[Cc][Gg][Ee]          { return COCGE;}
+"-"[Cc][Gg][Tt]          { return COCGT;}
+"-"[Cc][Ll][Tt]          { return COCLT;}
+"-"[Cc][Ll][Ee]          { return COCLE;}
 
-"-like"         { return COLIKE;}
-"-notlike"      { return CONOTLIKE;}
-"-match"        { return COMATCH;}
-"-notmatch"     { return CONOTMATCH;}
+"-"[Ll][Ii][Kk][Ee]         { return COLIKE;}
+"-"[Nn][Oo][Tt][Ll][Ii][Kk][Ee]      { return CONOTLIKE;}
+"-"[Mm][Aa][Tt][Cc][Hh]        { return COMATCH;}
+"-"[Nn][Oo][Tt][Mm][Aa][Tt][Cc][Hh]     { return CONOTMATCH;}
 
-"-ilike"        { return COILIKE;}
-"-inotlike"     { return COINOTLIKE;}
-"-imatch"       { return COIMATCH;}
-"-inotmatch"    { return COINOTMATCH;}
+"-"[Ii][Ll][Ii][Kk][Ee]        { return COILIKE;}
+"-"[Ii][Nn][Oo][Tt][Ll][Ii][Kk][Ee]     { return COINOTLIKE;}
+"-"[Ii][Mm][Aa][Tt][Cc][Hh]       { return COIMATCH;}
+"-"[Ii][Nn][Oo][Tt][Mm][Aa][Tt][Cc][Hh]    { return COINOTMATCH;}
 
-"-clike"        { return COCLIKE;}
-"-cnotlike"     { return COCNOTLIKE;}
-"-cmatch"       { return COCMATCH;}
-"-cnotmatch"    { return COCNOTMATCH;}
+"-"[Cc][Ll][Ii][Kk][Ee]        { return COCLIKE;}
+"-"[Cc][Nn][Oo][Tt][Ll][Ii][Kk][Ee]     { return COCNOTLIKE;}
+"-"[Cc][Mm][Aa][Tt][Cc][Hh]       { return COCMATCH;}
+"-"[Cc][Nn][Oo][Tt][Mm][Aa][Tt][Cc][Hh]    { return COCNOTMATCH;}
 
-"-contains"     { return COCONTAINS;}
-"-notcontains"  { return CONOTCONTAINS;}
+"-"[Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss]     { return COCONTAINS;}
+"-"[Nn][Oo][Tt][Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss]  { return CONOTCONTAINS;}
 
-"-icontains"    { return COICONTAINS;}
-"-inotcontains" { return COINOTCONTAINS;}
+"-"[Ii][Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss]    { return COICONTAINS;}
+"-"[Ii][Nn][Oo][Tt][Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss] { return COINOTCONTAINS;}
 
-"-ccontains"    { return COCCONTAINS;}
-"-cnotcontains" { return COCNOTCONTAINS;}
+"-"[Cc][Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss]    { return COCCONTAINS;}
+"-"[Cc][Nn][Oo][Tt][Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss] { return COCNOTCONTAINS;}
 
-"-isnot"        { return COISNOT;}
-"-is"           { return COIS;}
-"-as"           { return COAS;}
+"-"[Ii][Ss][Nn][Oo][Tt]        { return COISNOT;}
+"-"[Ii][Ss]           { return COIS;}
+"-"[As][Ss]           { return COAS;}
 
-"-replace"      { return COREPLACE;}
-"-ireplace"     { return COIREPLACE;}
-"-creplace"     { return COCREPLACE;}
+"-"[Rr][Ee][Pp][Ll][Aa][Cc][Ee]      { return COREPLACE;}
+"-"[Ii][Rr][Ee][Pp][Ll][Aa][Cc][Ee]     { return COIREPLACE;}
+"-"[Cc][Rr][Ee][Pp][Ll][Aa][Cc][Ee]     { return COCREPLACE;}
 
 {DECLITERAL}    { return NUMBER; }
 {HEXLITERAL}    { return NUMBER; }

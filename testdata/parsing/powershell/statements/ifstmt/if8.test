@@ -1,0 +1,15 @@
+IF expr1 expr2 ELSE expr3
+-----
+PowerShell script
+  PsiElement(if)('if')
+  PsiErrorElement:'(' expected
+    <empty list>
+  PsiWhiteSpace(' ')
+  PsiErrorElement:';' or new line expected
+    PsiElement(identifier)('expr1')
+    PsiWhiteSpace(' ')
+    PsiElement(identifier)('expr2')
+    PsiWhiteSpace(' ')
+    PsiElement(else)('else')
+    PsiWhiteSpace(' ')
+    PsiElement(identifier)('expr3')

@@ -1,0 +1,12 @@
+If (expr1) expr2 
+-----
+PowerShell script
+  IF statement
+    PsiElement(if)('if')
+    PsiWhiteSpace(' ')
+    PsiElement(()('(')
+    PsiElement(identifier)('expr1')
+    PsiElement())(')')
+    PsiWhiteSpace(' ')
+    PsiElement(identifier)('expr2')
+  PsiWhiteSpace(' ')

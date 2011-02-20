@@ -110,3 +110,4 @@ public class PsLexerTestsString extends PsLexerTestContext {
         Assert.assertNull(lexer.getTokenType());
     }
 }
+

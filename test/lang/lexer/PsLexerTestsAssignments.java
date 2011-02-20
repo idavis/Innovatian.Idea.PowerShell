@@ -8,13 +8,13 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         final String toParse = "$a=5";
         lexer.start(toParse);
 
-        //Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
-        //Assert.assertEquals("$", lexer.getTokenText());
+        Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
+        Assert.assertEquals("$", lexer.getTokenText());
 
-        //lexer.advance();
+        lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "$a");
+        Assert.assertEquals(lexer.getTokenText(), "a");
 
         lexer.advance();
 
@@ -34,13 +34,13 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         final String toParse = "$a=$true";
         lexer.start(toParse);
 
-        //Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
-        //Assert.assertEquals("$", lexer.getTokenText());
+        Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
+        Assert.assertEquals("$", lexer.getTokenText());
 
-        //lexer.advance();
+        lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "$a");
+        Assert.assertEquals(lexer.getTokenText(), "a");
 
         lexer.advance();
 
@@ -60,13 +60,13 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         final String toParse = "$a=7-eq7";
         lexer.start(toParse);
 
-        //Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
-        //Assert.assertEquals("$", lexer.getTokenText());
+        Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
+        Assert.assertEquals("$", lexer.getTokenText());
 
-        //lexer.advance();
+        lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "$a");
+        Assert.assertEquals(lexer.getTokenText(), "a");
 
         lexer.advance();
 
@@ -96,13 +96,13 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         final String toParse = "$a=7-eQ7";
         lexer.start(toParse);
 
-        //Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
-        //Assert.assertEquals("$", lexer.getTokenText());
+        Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
+        Assert.assertEquals("$", lexer.getTokenText());
 
-        //lexer.advance();
+        lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "$a");
+        Assert.assertEquals(lexer.getTokenText(), "a");
 
         lexer.advance();
 

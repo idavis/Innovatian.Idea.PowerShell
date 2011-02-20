@@ -39,6 +39,8 @@ import org.jetbrains.annotations.NotNull;
 %init{
 %init}
 
+%xstate IN_IDENT_DOLLAR
+%xstate IN_INNER_IDENT_BLOCK
 %xstate IN_SINGLE_EXPSTRING_DOLLAR
 %xstate IN_SINGLE_EXPSTRING
 %xstate IN_SINGLE_IDENT
@@ -162,38 +164,36 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
                                           }
   {NLS}                                  {  return WRONG; }
 }
-
-{IDENT}        { return IDENT;}
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Keywords ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-"begin"        { return BEGIN; }
-"break"        { return BREAK; }
-"catch"        { return CATCH; }
-"continue"     { return CONTINUE; }
-"data"         { return DATA; }
-"do"           { return DO; }
-"else"         { return ELSE; }
-"elseif"       { return ELSEIF; }
-"end"          { return END; }
-"exit"         { return EXIT; }
-"filter"       { return FILTER; }
-"finally"      { return FINALLY; }
-"for"          { return FOR; }
-"function"     { return FUNCTION; }
-"if"           { return IF; }
-"in"           { return IN; }
-"param"        { return PARAM; }
-"process"      { return PROCESS; }
-"return"       { return RETURN; }
-"switch"       { return SWITCH; }
-"throw"        { return THROW; }
-"try"          { return TRY; }
-"trap"         { return TRAP; }
-"while"        { return WHILE; }
-"until"        { return UNTIL; }
+[Bb][Ee][Gg][Ii][Nn]        { return BEGIN; }  // begin
+[Bb][Rr][Ee][Aa][Kk]        { return BREAK; }  // break
+[Cc][Aa][Tt][Cc][Hh]        { return CATCH; }  // catch
+[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee]     { return CONTINUE; }  // continue
+[Dd][Aa][Tt][Aa]         { return DATA; }  // data
+[Dd][Oo]           { return DO; }  // do
+[Ee][Ll][Ss][Ee]         { return ELSE; }  // else
+[Ee][Ll][Ss][Ee][Ii][Ff]       { return ELSEIF; }  // elseif
+[Ee][Nn][Dd]          { return END; }  // end
+[Ee][Xx][Ii][Tt]         { return EXIT; }  // exit
+[Ff][Ii][Ll][Tt][Ee][Rr]       { return FILTER; }  // filter
+[Ff][Ii][Nn][Aa][Ll][Ll][Yy]      { return FINALLY; }  // finally
+[Ff][Oo][Rr]          { return FOR; }  // for
+[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]     { return FUNCTION; }  // function
+[Ii][Ff]           { return IF; }  // if
+[Ii][Nn]           { return IN; }  // in
+[Pp][Aa][Rr][Aa][Mm]        { return PARAM; }  // param
+[Pp][Rr][Oo][Cc][Ee][Ss][Ss]      { return PROCESS; }  // process
+[Rr][Ee][Tt][Uu][Rr][Nn]       { return RETURN; }  // return
+[Ss][Ww][Ii][Tt][Cc][Hh]       { return SWITCH; }  // switch
+[Tt][Hh][Rr][Oo][Ww]        { return THROW; }  // throw
+[Tt][Rr][Yy]          { return TRY; }  // try
+[Tt][Rr][Aa][Pp]         { return TRAP; }  // trap
+[Ww][Hh][Ii][Ll][Ee]        { return WHILE; }  // while
+[Uu][Nn][Tt][Ii][Ll]        { return UNTIL; }  // until
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Operators ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -227,8 +227,25 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 {NLS}        { return NEWLINE; }
 //"$__"        { return IMPLICITVAR; } // having trouble with this.
 "$$"         { return LASTTOKEN; }
-"$" [^_$]          { return DOLLAR;  }
+"$" [^_$]    {  yybegin(IN_IDENT_DOLLAR); yypushback(1); return DOLLAR; }
 
+<IN_IDENT_DOLLAR> {
+  {IDENT_NOBUCKS}                         {  return IDENT; }
+  "{"                                     {  blockStack.push(LPAREN);
+                                             yybegin(IN_INNER_IDENT_BLOCK);
+                                             return LCURLY; }
+  [^]                                     {  return WRONG; }
+}
+
+<IN_INNER_IDENT_BLOCK>{
+  {IDENT_NOBUCKS}                        {  return IDENT; }
+  "}"                                    {  if (!blockStack.isEmpty()) { IElementType br = blockStack.pop(); }
+                                          yybegin(YYINITIAL);
+                                          return RCURLY; }
+  [^]                                     {  return WRONG; }
+}
+
+//{IDENT}        { return IDENT;}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////      Comparison Operators      ///////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,239 +309,239 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////      Commandlets      ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-"add-content"    { return CMDLET; }
-"add-history"    { return CMDLET; }
-"add-member"    { return CMDLET; }
-"add-pssnapin"    { return CMDLET; }
-"clear-content"    { return CMDLET; }
-"clear-item"    { return CMDLET; }
-"clear-itemproperty"    { return CMDLET; }
-"clear-variable"    { return CMDLET; }
-"compare-object"    { return CMDLET; }
-"convertfrom-securestring"    { return CMDLET; }
-"convert-path"    { return CMDLET; }
-"convertto-html"    { return CMDLET; }
-"convertto-securestring"    { return CMDLET; }
-"copy-item"    { return CMDLET; }
-"copy-itemproperty"    { return CMDLET; }
-"export-alias"    { return CMDLET; }
-"export-clixml"    { return CMDLET; }
-"export-console"    { return CMDLET; }
-"export-csv"    { return CMDLET; }
-"foreach-object"    { return CMDLET; }
-"format-custom"    { return CMDLET; }
-"format-list"    { return CMDLET; }
-"format-table"    { return CMDLET; }
-"format-wide"    { return CMDLET; }
-"get-acl"    { return CMDLET; }
-"get-alias"    { return CMDLET; }
-"get-authenticodesignature"    { return CMDLET; }
-"get-childitem"    { return CMDLET; }
-"get-command"    { return CMDLET; }
-"get-content"    { return CMDLET; }
-"get-credential"    { return CMDLET; }
-"get-culture"    { return CMDLET; }
-"get-date"    { return CMDLET; }
-"get-eventlog"    { return CMDLET; }
-"get-executionpolicy"    { return CMDLET; }
-"get-help"    { return CMDLET; }
-"get-history"    { return CMDLET; }
-"get-host"    { return CMDLET; }
-"get-item"    { return CMDLET; }
-"get-itemproperty"    { return CMDLET; }
-"get-location"    { return CMDLET; }
-"get-member"    { return CMDLET; }
-"get-pfxcertificate"    { return CMDLET; }
-"get-process"    { return CMDLET; }
-"get-psdrive"    { return CMDLET; }
-"get-psprovider"    { return CMDLET; }
-"get-pssnapin"    { return CMDLET; }
-"get-service"    { return CMDLET; }
-"get-tracesource"    { return CMDLET; }
-"get-uiculture"    { return CMDLET; }
-"get-unique"    { return CMDLET; }
-"get-variable"    { return CMDLET; }
-"get-wmiobject"    { return CMDLET; }
-"group-object"    { return CMDLET; }
-"import-alias"    { return CMDLET; }
-"import-clixml"    { return CMDLET; }
-"import-csv"    { return CMDLET; }
-"invoke-expression"    { return CMDLET; }
-"invoke-history"    { return CMDLET; }
-"invoke-item"    { return CMDLET; }
-"join-path"    { return CMDLET; }
-"measure-command"    { return CMDLET; }
-"measure-object"    { return CMDLET; }
-"move-item"    { return CMDLET; }
-"move-itemproperty"    { return CMDLET; }
-"new-alias"    { return CMDLET; }
-"new-item"    { return CMDLET; }
-"new-itemproperty"    { return CMDLET; }
-"new-object"    { return CMDLET; }
-"new-psdrive"    { return CMDLET; }
-"new-service"    { return CMDLET; }
-"new-timespan"    { return CMDLET; }
-"new-variable"    { return CMDLET; }
-"out-default"    { return CMDLET; }
-"out-file"    { return CMDLET; }
-"out-host"    { return CMDLET; }
-"out-null"    { return CMDLET; }
-"out-printer"    { return CMDLET; }
-"out-string"    { return CMDLET; }
-"pop-location"    { return CMDLET; }
-"push-location"    { return CMDLET; }
-"read-host"    { return CMDLET; }
-"remove-item"    { return CMDLET; }
-"remove-itemproperty"    { return CMDLET; }
-"remove-psdrive"    { return CMDLET; }
-"remove-pssnapin"    { return CMDLET; }
-"remove-variable"    { return CMDLET; }
-"rename-item"    { return CMDLET; }
-"rename-itemproperty"    { return CMDLET; }
-"resolve-path"    { return CMDLET; }
-"restart-service"    { return CMDLET; }
-"resume-service"    { return CMDLET; }
-"select-object"    { return CMDLET; }
-"select-string"    { return CMDLET; }
-"set-acl"    { return CMDLET; }
-"set-alias"    { return CMDLET; }
-"set-authenticodesignature"    { return CMDLET; }
-"set-content"    { return CMDLET; }
-"set-date"    { return CMDLET; }
-"set-executionpolicy"    { return CMDLET; }
-"set-item"    { return CMDLET; }
-"set-itemproperty"    { return CMDLET; }
-"set-location"    { return CMDLET; }
-"set-psdebug"    { return CMDLET; }
-"set-service"    { return CMDLET; }
-"set-tracesource"    { return CMDLET; }
-"set-variable"    { return CMDLET; }
-"sort-object"    { return CMDLET; }
-"split-path"    { return CMDLET; }
-"start-service"    { return CMDLET; }
-"start-sleep"    { return CMDLET; }
-"start-transcript"    { return CMDLET; }
-"stop-process"    { return CMDLET; }
-"stop-service"    { return CMDLET; }
-"stop-transcript"    { return CMDLET; }
-"suspend-service"    { return CMDLET; }
-"tee-object"    { return CMDLET; }
-"test-path"    { return CMDLET; }
-"trace-command"    { return CMDLET; }
-"update-formatdata"    { return CMDLET; }
-"update-typedata"    { return CMDLET; }
-"where-object"    { return CMDLET; }
-"write-debug"    { return CMDLET; }
-"write-error"    { return CMDLET; }
-"write-host"    { return CMDLET; }
-"write-output"    { return CMDLET; }
-"write-progress"    { return CMDLET; }
-"write-verbose"    { return CMDLET; }
-"write-warning"    { return CMDLET; }
+[Aa][Dd][Dd]"-"[Cc][Oo][Nn][Tt][Ee][Nn][Tt]    { return CMDLET; }  // add-content
+[Aa][Dd][Dd]"-"[Hh][Ii][Ss][Tt][Oo][Rr][Yy]    { return CMDLET; }  // add-history
+[Aa][Dd][Dd]"-"[Mm][Ee][Mm][Bb][Ee][Rr]    { return CMDLET; }  // add-member
+[Aa][Dd][Dd]"-"[Pp][Ss][Ss][Nn][Aa][Pp][Ii][Nn]    { return CMDLET; }  // add-pssnapin
+[Cc][Ll][Ee][Aa][Rr]"-"[Cc][Oo][Nn][Tt][Ee][Nn][Tt]    { return CMDLET; }  // clear-content
+[Cc][Ll][Ee][Aa][Rr]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // clear-item
+[Cc][Ll][Ee][Aa][Rr]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // clear-itemproperty
+[Cc][Ll][Ee][Aa][Rr]"-"[Vv][Aa][Rr][Ii][Aa][Bb][Ll][Ee]    { return CMDLET; }  // clear-variable
+[Cc][Oo][Mm][Pp][Aa][Rr][Ee]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // compare-object
+[Cc][Oo][Nn][Vv][Ee][Rr][Tt][Ff][Rr][Oo][Mm]"-"[Ss][Ee][Cc][Uu][Rr][Ee][Ss][Tt][Rr][Ii][Nn][Gg]    { return CMDLET; }  // convertfrom-securestring
+[Cc][Oo][Nn][Vv][Ee][Rr][Tt]"-"[Pp][Aa][Tt][Hh]    { return CMDLET; }  // convert-path
+[Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Oo]"-"[Hh][Tt][Mm][Ll]    { return CMDLET; }  // convertto-html
+[Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Oo]"-"[Ss][Ee][Cc][Uu][Rr][Ee][Ss][Tt][Rr][Ii][Nn][Gg]    { return CMDLET; }  // convertto-securestring
+[Cc][Oo][Pp][Yy]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // copy-item
+[Cc][Oo][Pp][Yy]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // copy-itemproperty
+[Ee][Xx][Pp][Oo][Rr][Tt]"-"[Aa][Ll][Ii][Aa][Ss]    { return CMDLET; }  // export-alias
+[Ee][Xx][Pp][Oo][Rr][Tt]"-"[Cc][Ll][Ii][Xx][Mm][Ll]    { return CMDLET; }  // export-clixml
+[Ee][Xx][Pp][Oo][Rr][Tt]"-"[Cc][Oo][Nn][Ss][Oo][Ll][Ee]    { return CMDLET; }  // export-console
+[Ee][Xx][Pp][Oo][Rr][Tt]"-"[Cc][Ss][Vv]    { return CMDLET; }  // export-csv
+[Ff][Oo][Rr][Ee][Aa][Cc][Hh]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // foreach-object
+[Ff][Oo][Rr][Mm][Aa][Tt]"-"[Cc][Uu][Ss][Tt][Oo][Mm]    { return CMDLET; }  // format-custom
+[Ff][Oo][Rr][Mm][Aa][Tt]"-"[Ll][Ii][Ss][Tt]    { return CMDLET; }  // format-list
+[Ff][Oo][Rr][Mm][Aa][Tt]"-"[Tt][Aa][Bb][Ll][Ee]    { return CMDLET; }  // format-table
+[Ff][Oo][Rr][Mm][Aa][Tt]"-"[Ww][Ii][Dd][Ee]    { return CMDLET; }  // format-wide
+[Gg][Ee][Tt]"-"[Aa][Cc][Ll]    { return CMDLET; }  // get-acl
+[Gg][Ee][Tt]"-"[Aa][Ll][Ii][Aa][Ss]    { return CMDLET; }  // get-alias
+[Gg][Ee][Tt]"-"[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Oo][Dd][Ee][Ss][Ii][Gg][Nn][Aa][Tt][Uu][Rr][Ee]    { return CMDLET; }  // get-authenticodesignature
+[Gg][Ee][Tt]"-"[Cc][Hh][Ii][Ll][Dd][Ii][Tt][Ee][Mm]    { return CMDLET; }  // get-childitem
+[Gg][Ee][Tt]"-"[Cc][Oo][Mm][Mm][Aa][Nn][Dd]    { return CMDLET; }  // get-command
+[Gg][Ee][Tt]"-"[Cc][Oo][Nn][Tt][Ee][Nn][Tt]    { return CMDLET; }  // get-content
+[Gg][Ee][Tt]"-"[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]    { return CMDLET; }  // get-credential
+[Gg][Ee][Tt]"-"[Cc][Uu][Ll][Tt][Uu][Rr][Ee]    { return CMDLET; }  // get-culture
+[Gg][Ee][Tt]"-"[Dd][Aa][Tt][Ee]    { return CMDLET; }  // get-date
+[Gg][Ee][Tt]"-"[Ee][Vv][Ee][Nn][Tt][Ll][Oo][Gg]    { return CMDLET; }  // get-eventlog
+[Gg][Ee][Tt]"-"[Ee][Xx][Ee][Cc][Uu][Tt][Ii][Oo][Nn][Pp][Oo][Ll][Ii][Cc][Yy]    { return CMDLET; }  // get-executionpolicy
+[Gg][Ee][Tt]"-"[Hh][Ee][Ll][Pp]    { return CMDLET; }  // get-help
+[Gg][Ee][Tt]"-"[Hh][Ii][Ss][Tt][Oo][Rr][Yy]    { return CMDLET; }  // get-history
+[Gg][Ee][Tt]"-"[Hh][Oo][Ss][Tt]    { return CMDLET; }  // get-host
+[Gg][Ee][Tt]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // get-item
+[Gg][Ee][Tt]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // get-itemproperty
+[Gg][Ee][Tt]"-"[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn]    { return CMDLET; }  // get-location
+[Gg][Ee][Tt]"-"[Mm][Ee][Mm][Bb][Ee][Rr]    { return CMDLET; }  // get-member
+[Gg][Ee][Tt]"-"[Pp][Ff][Xx][Cc][Ee][Rr][Tt][Ii][Ff][Ii][Cc][Aa][Tt][Ee]    { return CMDLET; }  // get-pfxcertificate
+[Gg][Ee][Tt]"-"[Pp][Rr][Oo][Cc][Ee][Ss][Ss]    { return CMDLET; }  // get-process
+[Gg][Ee][Tt]"-"[Pp][Ss][Dd][Rr][Ii][Vv][Ee]    { return CMDLET; }  // get-psdrive
+[Gg][Ee][Tt]"-"[Pp][Ss][Pp][Rr][Oo][Vv][Ii][Dd][Ee][Rr]    { return CMDLET; }  // get-psprovider
+[Gg][Ee][Tt]"-"[Pp][Ss][Ss][Nn][Aa][Pp][Ii][Nn]    { return CMDLET; }  // get-pssnapin
+[Gg][Ee][Tt]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // get-service
+[Gg][Ee][Tt]"-"[Tt][Rr][Aa][Cc][Ee][Ss][Oo][Uu][Rr][Cc][Ee]    { return CMDLET; }  // get-tracesource
+[Gg][Ee][Tt]"-"[Uu][Ii][Cc][Uu][Ll][Tt][Uu][Rr][Ee]    { return CMDLET; }  // get-uiculture
+[Gg][Ee][Tt]"-"[Uu][Nn][Ii][Qq][Uu][Ee]    { return CMDLET; }  // get-unique
+[Gg][Ee][Tt]"-"[Vv][Aa][Rr][Ii][Aa][Bb][Ll][Ee]    { return CMDLET; }  // get-variable
+[Gg][Ee][Tt]"-"[Ww][Mm][Ii][Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // get-wmiobject
+[Gg][Rr][Oo][Uu][Pp]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // group-object
+[Ii][Mm][Pp][Oo][Rr][Tt]"-"[Aa][Ll][Ii][Aa][Ss]    { return CMDLET; }  // import-alias
+[Ii][Mm][Pp][Oo][Rr][Tt]"-"[Cc][Ll][Ii][Xx][Mm][Ll]    { return CMDLET; }  // import-clixml
+[Ii][Mm][Pp][Oo][Rr][Tt]"-"[Cc][Ss][Vv]    { return CMDLET; }  // import-csv
+[Ii][Nn][Vv][Oo][Kk][Ee]"-"[Ee][Xx][Pp][Rr][Ee][Ss][Ss][Ii][Oo][Nn]    { return CMDLET; }  // invoke-expression
+[Ii][Nn][Vv][Oo][Kk][Ee]"-"[Hh][Ii][Ss][Tt][Oo][Rr][Yy]    { return CMDLET; }  // invoke-history
+[Ii][Nn][Vv][Oo][Kk][Ee]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // invoke-item
+[Jj][Oo][Ii][Nn]"-"[Pp][Aa][Tt][Hh]    { return CMDLET; }  // join-path
+[Mm][Ee][Aa][Ss][Uu][Rr][Ee]"-"[Cc][Oo][Mm][Mm][Aa][Nn][Dd]    { return CMDLET; }  // measure-command
+[Mm][Ee][Aa][Ss][Uu][Rr][Ee]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // measure-object
+[Mm][Oo][Vv][Ee]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // move-item
+[Mm][Oo][Vv][Ee]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // move-itemproperty
+[Nn][Ee][Ww]"-"[Aa][Ll][Ii][Aa][Ss]    { return CMDLET; }  // new-alias
+[Nn][Ee][Ww]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // new-item
+[Nn][Ee][Ww]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // new-itemproperty
+[Nn][Ee][Ww]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // new-object
+[Nn][Ee][Ww]"-"[Pp][Ss][Dd][Rr][Ii][Vv][Ee]    { return CMDLET; }  // new-psdrive
+[Nn][Ee][Ww]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // new-service
+[Nn][Ee][Ww]"-"[Tt][Ii][Mm][Ee][Ss][Pp][Aa][Nn]    { return CMDLET; }  // new-timespan
+[Nn][Ee][Ww]"-"[Vv][Aa][Rr][Ii][Aa][Bb][Ll][Ee]    { return CMDLET; }  // new-variable
+[Oo][Uu][Tt]"-"[Dd][Ee][Ff][Aa][Uu][Ll][Tt]    { return CMDLET; }  // out-default
+[Oo][Uu][Tt]"-"[Ff][Ii][Ll][Ee]    { return CMDLET; }  // out-file
+[Oo][Uu][Tt]"-"[Hh][Oo][Ss][Tt]    { return CMDLET; }  // out-host
+[Oo][Uu][Tt]"-"[Nn][Uu][Ll][Ll]    { return CMDLET; }  // out-null
+[Oo][Uu][Tt]"-"[Pp][Rr][Ii][Nn][Tt][Ee][Rr]    { return CMDLET; }  // out-printer
+[Oo][Uu][Tt]"-"[Ss][Tt][Rr][Ii][Nn][Gg]    { return CMDLET; }  // out-string
+[Pp][Oo][Pp]"-"[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn]    { return CMDLET; }  // pop-location
+[Pp][Uu][Ss][Hh]"-"[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn]    { return CMDLET; }  // push-location
+[Rr][Ee][Aa][Dd]"-"[Hh][Oo][Ss][Tt]    { return CMDLET; }  // read-host
+[Rr][Ee][Mm][Oo][Vv][Ee]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // remove-item
+[Rr][Ee][Mm][Oo][Vv][Ee]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // remove-itemproperty
+[Rr][Ee][Mm][Oo][Vv][Ee]"-"[Pp][Ss][Dd][Rr][Ii][Vv][Ee]    { return CMDLET; }  // remove-psdrive
+[Rr][Ee][Mm][Oo][Vv][Ee]"-"[Pp][Ss][Ss][Nn][Aa][Pp][Ii][Nn]    { return CMDLET; }  // remove-pssnapin
+[Rr][Ee][Mm][Oo][Vv][Ee]"-"[Vv][Aa][Rr][Ii][Aa][Bb][Ll][Ee]    { return CMDLET; }  // remove-variable
+[Rr][Ee][Nn][Aa][Mm][Ee]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // rename-item
+[Rr][Ee][Nn][Aa][Mm][Ee]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // rename-itemproperty
+[Rr][Ee][Ss][Oo][Ll][Vv][Ee]"-"[Pp][Aa][Tt][Hh]    { return CMDLET; }  // resolve-path
+[Rr][Ee][Ss][Tt][Aa][Rr][Tt]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // restart-service
+[Rr][Ee][Ss][Uu][Mm][Ee]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // resume-service
+[Ss][Ee][Ll][Ee][Cc][Tt]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // select-object
+[Ss][Ee][Ll][Ee][Cc][Tt]"-"[Ss][Tt][Rr][Ii][Nn][Gg]    { return CMDLET; }  // select-string
+[Ss][Ee][Tt]"-"[Aa][Cc][Ll]    { return CMDLET; }  // set-acl
+[Ss][Ee][Tt]"-"[Aa][Ll][Ii][Aa][Ss]    { return CMDLET; }  // set-alias
+[Ss][Ee][Tt]"-"[Aa][Uu][Tt][Hh][Ee][Nn][Tt][Ii][Cc][Oo][Dd][Ee][Ss][Ii][Gg][Nn][Aa][Tt][Uu][Rr][Ee]    { return CMDLET; }  // set-authenticodesignature
+[Ss][Ee][Tt]"-"[Cc][Oo][Nn][Tt][Ee][Nn][Tt]    { return CMDLET; }  // set-content
+[Ss][Ee][Tt]"-"[Dd][Aa][Tt][Ee]    { return CMDLET; }  // set-date
+[Ss][Ee][Tt]"-"[Ee][Xx][Ee][Cc][Uu][Tt][Ii][Oo][Nn][Pp][Oo][Ll][Ii][Cc][Yy]    { return CMDLET; }  // set-executionpolicy
+[Ss][Ee][Tt]"-"[Ii][Tt][Ee][Mm]    { return CMDLET; }  // set-item
+[Ss][Ee][Tt]"-"[Ii][Tt][Ee][Mm][Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]    { return CMDLET; }  // set-itemproperty
+[Ss][Ee][Tt]"-"[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn]    { return CMDLET; }  // set-location
+[Ss][Ee][Tt]"-"[Pp][Ss][Dd][Ee][Bb][Uu][Gg]    { return CMDLET; }  // set-psdebug
+[Ss][Ee][Tt]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // set-service
+[Ss][Ee][Tt]"-"[Tt][Rr][Aa][Cc][Ee][Ss][Oo][Uu][Rr][Cc][Ee]    { return CMDLET; }  // set-tracesource
+[Ss][Ee][Tt]"-"[Vv][Aa][Rr][Ii][Aa][Bb][Ll][Ee]    { return CMDLET; }  // set-variable
+[Ss][Oo][Rr][Tt]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // sort-object
+[Ss][Pp][Ll][Ii][Tt]"-"[Pp][Aa][Tt][Hh]    { return CMDLET; }  // split-path
+[Ss][Tt][Aa][Rr][Tt]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // start-service
+[Ss][Tt][Aa][Rr][Tt]"-"[Ss][Ll][Ee][Ee][Pp]    { return CMDLET; }  // start-sleep
+[Ss][Tt][Aa][Rr][Tt]"-"[Tt][Rr][Aa][Nn][Ss][Cc][Rr][Ii][Pp][Tt]    { return CMDLET; }  // start-transcript
+[Ss][Tt][Oo][Pp]"-"[Pp][Rr][Oo][Cc][Ee][Ss][Ss]    { return CMDLET; }  // stop-process
+[Ss][Tt][Oo][Pp]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // stop-service
+[Ss][Tt][Oo][Pp]"-"[Tt][Rr][Aa][Nn][Ss][Cc][Rr][Ii][Pp][Tt]    { return CMDLET; }  // stop-transcript
+[Ss][Uu][Ss][Pp][Ee][Nn][Dd]"-"[Ss][Ee][Rr][Vv][Ii][Cc][Ee]    { return CMDLET; }  // suspend-service
+[Tt][Ee][Ee]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // tee-object
+[Tt][Ee][Ss][Tt]"-"[Pp][Aa][Tt][Hh]    { return CMDLET; }  // test-path
+[Tt][Rr][Aa][Cc][Ee]"-"[Cc][Oo][Mm][Mm][Aa][Nn][Dd]    { return CMDLET; }  // trace-command
+[Uu][Pp][Dd][Aa][Tt][Ee]"-"[Ff][Oo][Rr][Mm][Aa][Tt][Dd][Aa][Tt][Aa]    { return CMDLET; }  // update-formatdata
+[Uu][Pp][Dd][Aa][Tt][Ee]"-"[Tt][Yy][Pp][Ee][Dd][Aa][Tt][Aa]    { return CMDLET; }  // update-typedata
+[Ww][Hh][Ee][Rr][Ee]"-"[Oo][Bb][Jj][Ee][Cc][Tt]    { return CMDLET; }  // where-object
+[Ww][Rr][Ii][Tt][Ee]"-"[Dd][Ee][Bb][Uu][Gg]    { return CMDLET; }  // write-debug
+[Ww][Rr][Ii][Tt][Ee]"-"[Ee][Rr][Rr][Oo][Rr]    { return CMDLET; }  // write-error
+[Ww][Rr][Ii][Tt][Ee]"-"[Hh][Oo][Ss][Tt]    { return CMDLET; }  // write-host
+[Ww][Rr][Ii][Tt][Ee]"-"[Oo][Uu][Tt][Pp][Uu][Tt]    { return CMDLET; }  // write-output
+[Ww][Rr][Ii][Tt][Ee]"-"[Pp][Rr][Oo][Gg][Rr][Ee][Ss][Ss]    { return CMDLET; }  // write-progress
+[Ww][Rr][Ii][Tt][Ee]"-"[Vv][Ee][Rr][Bb][Oo][Ss][Ee]    { return CMDLET; }  // write-verbose
+[Ww][Rr][Ii][Tt][Ee]"-"[Ww][Aa][Rr][Nn][Ii][Nn][Gg]    { return CMDLET; }  // write-warning
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////      Aliases      ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-"ac"    { return ALIAS; }
-"asnp"    { return ALIAS; }
-"clc"    { return ALIAS; }
-"cli"    { return ALIAS; }
-"clp"    { return ALIAS; }
-"clv"    { return ALIAS; }
-"cpi"    { return ALIAS; }
-"cpp"    { return ALIAS; }
-"cvpa"    { return ALIAS; }
-"diff"    { return ALIAS; }
-"epal"    { return ALIAS; }
-"epcsv"    { return ALIAS; }
-"fc"    { return ALIAS; }
-"fl"    { return ALIAS; }
-"foreach"    { return ALIAS; }
-"ft"    { return ALIAS; }
-"fw"    { return ALIAS; }
-"gal"    { return ALIAS; }
-"gc"    { return ALIAS; }
-"gci"    { return ALIAS; }
-"gcm"    { return ALIAS; }
-"gdr"    { return ALIAS; }
-"ghy"    { return ALIAS; }
-"gi"    { return ALIAS; }
-"gl"    { return ALIAS; }
-"gm"    { return ALIAS; }
-"gp"    { return ALIAS; }
-"gps"    { return ALIAS; }
-"group"    { return ALIAS; }
-"gsv"    { return ALIAS; }
-"gsnp"    { return ALIAS; }
-"gu"    { return ALIAS; }
-"gv"    { return ALIAS; }
-"gwmi"    { return ALIAS; }
-"iex"    { return ALIAS; }
-"ihy"    { return ALIAS; }
-"ii"    { return ALIAS; }
-"ipal"    { return ALIAS; }
-"ipcsv"    { return ALIAS; }
-"mi"    { return ALIAS; }
-"mp"    { return ALIAS; }
-"nal"    { return ALIAS; }
-"ndr"    { return ALIAS; }
-"ni"    { return ALIAS; }
-"nv"    { return ALIAS; }
-"oh"    { return ALIAS; }
-"rdr"    { return ALIAS; }
-"ri"    { return ALIAS; }
-"rni"    { return ALIAS; }
-"rnp"    { return ALIAS; }
-"rp"    { return ALIAS; }
-"rsnp"    { return ALIAS; }
-"rv"    { return ALIAS; }
-"rvpa"    { return ALIAS; }
-"sal"    { return ALIAS; }
-"sasv"    { return ALIAS; }
-"sc"    { return ALIAS; }
-"select"    { return ALIAS; }
-"si"    { return ALIAS; }
-"sl"    { return ALIAS; }
-"sleep"    { return ALIAS; }
-"sort"    { return ALIAS; }
-"sp"    { return ALIAS; }
-"spps"    { return ALIAS; }
-"spsv"    { return ALIAS; }
-"sv"    { return ALIAS; }
-"tee"    { return ALIAS; }
-"where"    { return ALIAS; }
-"write"    { return ALIAS; }
-"cat"    { return ALIAS; }
-"cd"    { return ALIAS; }
-"clear"    { return ALIAS; }
-"cp"    { return ALIAS; }
-"h"    { return ALIAS; }
-"history"    { return ALIAS; }
-"kill"    { return ALIAS; }
-"lp"    { return ALIAS; }
-"ls"    { return ALIAS; }
-"mount"    { return ALIAS; }
-"mv"    { return ALIAS; }
-"popd"    { return ALIAS; }
-"ps"    { return ALIAS; }
-"pushd"    { return ALIAS; }
-"pwd"    { return ALIAS; }
-"r"    { return ALIAS; }
-"rm"    { return ALIAS; }
-"rmdir"    { return ALIAS; }
-"echo"    { return ALIAS; }
-"cls"    { return ALIAS; }
-"chdir"    { return ALIAS; }
-"copy"    { return ALIAS; }
-"del"    { return ALIAS; }
-"dir"    { return ALIAS; }
-"erase"    { return ALIAS; }
-"move"    { return ALIAS; }
-"rd"    { return ALIAS; }
-"ren"    { return ALIAS; }
-"set"    { return ALIAS; }
-"type"    { return ALIAS; }
+[Aa][Cc]    { return ALIAS; }  // ac
+[Aa][Ss][Nn][Pp]    { return ALIAS; }  // asnp
+[Cc][Ll][Cc]    { return ALIAS; }  // clc
+[Cc][Ll][Ii]    { return ALIAS; }  // cli
+[Cc][Ll][Pp]    { return ALIAS; }  // clp
+[Cc][Ll][Vv]    { return ALIAS; }  // clv
+[Cc][Pp][Ii]    { return ALIAS; }  // cpi
+[Cc][Pp][Pp]    { return ALIAS; }  // cpp
+[Cc][Vv][Pp][Aa]    { return ALIAS; }  // cvpa
+[Dd][Ii][Ff][Ff]    { return ALIAS; }  // diff
+[Ee][Pp][Aa][Ll]    { return ALIAS; }  // epal
+[Ee][Pp][Cc][Ss][Vv]    { return ALIAS; }  // epcsv
+[Ff][Cc]    { return ALIAS; }  // fc
+[Ff][Ll]    { return ALIAS; }  // fl
+[Ff][Oo][Rr][Ee][Aa][Cc][Hh]    { return ALIAS; }  // foreach
+[Ff][Tt]    { return ALIAS; }  // ft
+[Ff][Ww]    { return ALIAS; }  // fw
+[Gg][Aa][Ll]    { return ALIAS; }  // gal
+[Gg][Cc]    { return ALIAS; }  // gc
+[Gg][Cc][Ii]    { return ALIAS; }  // gci
+[Gg][Cc][Mm]    { return ALIAS; }  // gcm
+[Gg][Dd][Rr]    { return ALIAS; }  // gdr
+[Gg][Hh][Yy]    { return ALIAS; }  // ghy
+[Gg][Ii]    { return ALIAS; }  // gi
+[Gg][Ll]    { return ALIAS; }  // gl
+[Gg][Mm]    { return ALIAS; }  // gm
+[Gg][Pp]    { return ALIAS; }  // gp
+[Gg][Pp][Ss]    { return ALIAS; }  // gps
+[Gg][Rr][Oo][Uu][Pp]    { return ALIAS; }  // group
+[Gg][Ss][Vv]    { return ALIAS; }  // gsv
+[Gg][Ss][Nn][Pp]    { return ALIAS; }  // gsnp
+[Gg][Uu]    { return ALIAS; }  // gu
+[Gg][Vv]    { return ALIAS; }  // gv
+[Gg][Ww][Mm][Ii]    { return ALIAS; }  // gwmi
+[Ii][Ee][Xx]    { return ALIAS; }  // iex
+[Ii][Hh][Yy]    { return ALIAS; }  // ihy
+[Ii][Ii]    { return ALIAS; }  // ii
+[Ii][Pp][Aa][Ll]    { return ALIAS; }  // ipal
+[Ii][Pp][Cc][Ss][Vv]    { return ALIAS; }  // ipcsv
+[Mm][Ii]    { return ALIAS; }  // mi
+[Mm][Pp]    { return ALIAS; }  // mp
+[Nn][Aa][Ll]    { return ALIAS; }  // nal
+[Nn][Dd][Rr]    { return ALIAS; }  // ndr
+[Nn][Ii]    { return ALIAS; }  // ni
+[Nn][Vv]    { return ALIAS; }  // nv
+[Oo][Hh]    { return ALIAS; }  // oh
+[Rr][Dd][Rr]    { return ALIAS; }  // rdr
+[Rr][Ii]    { return ALIAS; }  // ri
+[Rr][Nn][Ii]    { return ALIAS; }  // rni
+[Rr][Nn][Pp]    { return ALIAS; }  // rnp
+[Rr][Pp]    { return ALIAS; }  // rp
+[Rr][Ss][Nn][Pp]    { return ALIAS; }  // rsnp
+[Rr][Vv]    { return ALIAS; }  // rv
+[Rr][Vv][Pp][Aa]    { return ALIAS; }  // rvpa
+[Ss][Aa][Ll]    { return ALIAS; }  // sal
+[Ss][Aa][Ss][Vv]    { return ALIAS; }  // sasv
+[Ss][Cc]    { return ALIAS; }  // sc
+[Ss][Ee][Ll][Ee][Cc][Tt]    { return ALIAS; }  // select
+[Ss][Ii]    { return ALIAS; }  // si
+[Ss][Ll]    { return ALIAS; }  // sl
+[Ss][Ll][Ee][Ee][Pp]    { return ALIAS; }  // sleep
+[Ss][Oo][Rr][Tt]    { return ALIAS; }  // sort
+[Ss][Pp]    { return ALIAS; }  // sp
+[Ss][Pp][Pp][Ss]    { return ALIAS; }  // spps
+[Ss][Pp][Ss][Vv]    { return ALIAS; }  // spsv
+[Ss][Vv]    { return ALIAS; }  // sv
+[Tt][Ee][Ee]    { return ALIAS; }  // tee
+[Ww][Hh][Ee][Rr][Ee]    { return ALIAS; }  // where
+[Ww][Rr][Ii][Tt][Ee]    { return ALIAS; }  // write
+[Cc][Aa][Tt]    { return ALIAS; }  // cat
+[Cc][Dd]    { return ALIAS; }  // cd
+[Cc][Ll][Ee][Aa][Rr]    { return ALIAS; }  // clear
+[Cc][Pp]    { return ALIAS; }  // cp
+[Hh]    { return ALIAS; }  // h
+[Hh][Ii][Ss][Tt][Oo][Rr][Yy]    { return ALIAS; }  // history
+[Kk][Ii][Ll][Ll]    { return ALIAS; }  // kill
+[Ll][Pp]    { return ALIAS; }  // lp
+[Ll][Ss]    { return ALIAS; }  // ls
+[Mm][Oo][Uu][Nn][Tt]    { return ALIAS; }  // mount
+[Mm][Vv]    { return ALIAS; }  // mv
+[Pp][Oo][Pp][Dd]    { return ALIAS; }  // popd
+[Pp][Ss]    { return ALIAS; }  // ps
+[Pp][Uu][Ss][Hh][Dd]    { return ALIAS; }  // pushd
+[Pp][Ww][Dd]    { return ALIAS; }  // pwd
+[Rr]    { return ALIAS; }  // r
+[Rr][Mm]    { return ALIAS; }  // rm
+[Rr][Mm][Dd][Ii][Rr]    { return ALIAS; }  // rmdir
+[Ee][Cc][Hh][Oo]    { return ALIAS; }  // echo
+[Cc][Ll][Ss]    { return ALIAS; }  // cls
+[Cc][Hh][Dd][Ii][Rr]    { return ALIAS; }  // chdir
+[Cc][Oo][Pp][Yy]    { return ALIAS; }  // copy
+[Dd][Ee][Ll]    { return ALIAS; }  // del
+[Dd][Ii][Rr]    { return ALIAS; }  // dir
+[Ee][Rr][Aa][Ss][Ee]    { return ALIAS; }  // erase
+[Mm][Oo][Vv][Ee]    { return ALIAS; }  // move
+[Rr][Dd]    { return ALIAS; }  // rd
+[Rr][Ee][Nn]    { return ALIAS; }  // ren
+[Ss][Ee][Tt]    { return ALIAS; }  // set
+[Tt][Yy][Pp][Ee]    { return ALIAS; }  // type
 
 // oh no
 .               {   return WRONG; }

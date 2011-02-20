@@ -1,4 +1,4 @@
-IF expr1 expr2 ELSE expr3
+IF $expr1 $expr2 ELSE $expr3
 -----
 PowerShell script
   PsiElement(if)('if')

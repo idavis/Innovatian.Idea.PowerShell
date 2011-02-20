@@ -1,4 +1,4 @@
-iF (expr1) expr2 ElsE expr3
+iF ($expr1) $expr2 ElsE $expr3
 -----
 PowerShell script
   IF statement

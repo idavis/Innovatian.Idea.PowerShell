@@ -1,0 +1,9 @@
+$expr1=$expr2
+-----
+PowerShell script
+  Assignment statement
+    PsiElement($)('$')
+    PsiElement(identifier)('expr1')
+	PsiElement(=)('=')
+    PsiElement($)('$')
+    PsiElement(identifier)('expr2')

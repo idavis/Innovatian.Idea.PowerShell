@@ -40,7 +40,7 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "a");
+        Assert.assertEquals("a", lexer.getTokenText());
 
         lexer.advance();
 
@@ -49,8 +49,13 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
 
         lexer.advance();
 
+        Assert.assertEquals(PsTokenTypes.DOLLAR, lexer.getTokenType());
+        Assert.assertEquals("$", lexer.getTokenText());
+
+        lexer.advance();
+
+        Assert.assertEquals("true", lexer.getTokenText());
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals("$true", lexer.getTokenText());
 
         lexer.advance();
         Assert.assertNull(lexer.getTokenType());
@@ -66,7 +71,7 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "a");
+        Assert.assertEquals("a", lexer.getTokenText());
 
         lexer.advance();
 
@@ -102,7 +107,7 @@ public class PsLexerTestsAssignments extends PsLexerTestContext {
         lexer.advance();
 
         Assert.assertEquals(PsTokenTypes.IDENT, lexer.getTokenType());
-        Assert.assertEquals(lexer.getTokenText(), "a");
+        Assert.assertEquals("a", lexer.getTokenText());
 
         lexer.advance();
 

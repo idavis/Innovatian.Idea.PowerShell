@@ -52,7 +52,7 @@ import org.jetbrains.annotations.NotNull;
 
 %state IN_INNER_BLOCK
 
-//VARIABLE = \$[A-Za-z]+ | \$\{.+\}
+//VARIABLE = \$[A-Za-z0-9]+ | \$\{.+\}
 PARAMETERARGUMENTTOKEN = [^-($0-9].*[^ \t]
 PARAMETERTOKEN = -[A-Za-z]+[:]{PARAMETERARGUMENTTOKEN}
 CALLARGUMENTSEPARATOR= ' |'
@@ -64,10 +64,8 @@ DECLITERAL     =       {DECDIGIT}+
 HEXLITERAL     =       0[xX]{HEXDIGIT}+
 
 LETTER = [:letter:] | "_"
-
-IDENT = (\$) ({LETTER} | {DECDIGIT} )*
-IDENT_NOBUCKS = {LETTER} ({LETTER} | {DECDIGIT})*
-IDENT_NOBUCKS_CURLY = "{" ({LETTER} ({LETTER} | {DECDIGIT})*) "}"
+SIMPLEIDENT = [A-Za-z0-9]+
+IDENT_INCURLY = [^\{\}\r\n]+ "}"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// NewLines and spaces /////////////////////////////////////////////////////////////////////////////////////////
@@ -127,20 +125,20 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 
 // Single double-quoted Expando String
 <IN_SINGLE_IDENT>{
-  {IDENT_NOBUCKS}                        {  yybegin(IN_SINGLE_DOT);
+  {SIMPLEIDENT}                        {  yybegin(IN_SINGLE_DOT);
                                              return IDENT;  }
   [^]                                     {  yypushback(1);
                                              yybegin(IN_SINGLE_EXPSTRING);  }
 }
 <IN_SINGLE_DOT>{
-  "." /{IDENT_NOBUCKS}                   {  yybegin(IN_SINGLE_IDENT);
+  "." /{SIMPLEIDENT}                   {  yybegin(IN_SINGLE_IDENT);
                                              return DOT;  }
   [^]                                     {  yypushback(1);
                                              yybegin(IN_SINGLE_EXPSTRING);  }
 }
 
 <IN_SINGLE_EXPSTRING_DOLLAR> {
-  {IDENT_NOBUCKS}                         {  return IDENT; }
+  {SIMPLEIDENT}                         {  return IDENT; }
   "{"                                     {  blockStack.push(LPAREN);
                                              yybegin(IN_INNER_BLOCK);
                                              return LCURLY; }
@@ -148,7 +146,7 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
                                              yybegin(IN_SINGLE_EXPSTRING); }
 }
 <IN_INNER_BLOCK>{
-{IDENT_NOBUCKS}                        {  /*yybegin(IN_SINGLE_DOT);*/ return IDENT; }
+{IDENT_INCURLY}                        {   yypushback(1);/*yybegin(IN_SINGLE_DOT);*/ return IDENT; }
 "}"                                    {  if (!blockStack.isEmpty()) { IElementType br = blockStack.pop(); }
                                           yybegin(IN_SINGLE_EXPSTRING);
                                           return RCURLY; }
@@ -230,7 +228,7 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 "$" [^_$]    {  yybegin(IN_IDENT_DOLLAR); yypushback(1); return DOLLAR; }
 
 <IN_IDENT_DOLLAR> {
-  {IDENT_NOBUCKS}                         {  return IDENT; }
+  {SIMPLEIDENT}                         {  yybegin(YYINITIAL); return IDENT; }
   "{"                                     {  blockStack.push(LPAREN);
                                              yybegin(IN_INNER_IDENT_BLOCK);
                                              return LCURLY; }
@@ -238,7 +236,7 @@ COMMENT_TAIL=( [^"*"]* ("*"+ [^"*""/"] )? )* ("*" | "*"+"/")?
 }
 
 <IN_INNER_IDENT_BLOCK>{
-  {IDENT_NOBUCKS}                        {  return IDENT; }
+  {IDENT_INCURLY}                        {  yypushback(1); return IDENT; }
   "}"                                    {  if (!blockStack.isEmpty()) { IElementType br = blockStack.pop(); }
                                           yybegin(YYINITIAL);
                                           return RCURLY; }
